@@ -98,16 +98,16 @@
             align-items: center;
             font-size: 15px;
         }
-        .dropdown-toggle {
-            color: $cm-black;
+        .name{            
             font-weight: 600;
-            &::after {
-                display: none;
-            }
-            svg {
-                margin-left: 15px;
-                color: $cm-gray--300;
-            }
+            font-size: 14px;
+            letter-spacing: 0.005em;
+            margin-bottom: 0;
+            margin-left: 15px;
+        }
+        .dropdown-button {
+            margin-left: 15px;
+            color: $cm-gray--300;
         }
     }
     /* Return */

@@ -1,0 +1,46 @@
+@import "../../styles/css/variables";
+.cm-dropdown-menu {
+    z-index: 9;
+    min-width: 200px;
+    position: absolute;
+    top: 50px;
+    right: 2%;
+    border-radius: 6px;
+    list-style: none;
+    text-align: start;
+    padding-left: 0;
+    .cm-dropdown-link {
+        display: block;
+        height: 100%;
+        width: 100%;
+        text-decoration: none;
+        color: $cm-gray--400;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 14px;
+        padding: 16px;
+        svg{
+            margin-right: 15px;
+            font-size: 16px;
+            vertical-align: -0.125em;
+        }
+        &:hover {
+            color: $cm-white;
+            svg{
+                color: $cm-primary;
+            }
+        }
+    }
+    li {
+        cursor: pointer;
+        padding-left: 10px;
+        &:hover {
+            background: #32D4A426;
+            color: $cm-white !important;
+            font-weight: 600;
+            svg{
+                color: $cm-primary;
+            }
+        }
+      }      
+}

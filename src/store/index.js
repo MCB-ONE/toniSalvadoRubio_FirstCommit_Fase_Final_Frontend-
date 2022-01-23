@@ -1,11 +1,20 @@
 import { configureStore } from '@reduxjs/toolkit';
-import alumnos from './slices/alumnos/index';
-import clientes from './slices/clientes/index';
-// Default full initilai state to test
+import authReducer from './slices/auth';
+import messageReducer from './slices/message';
+import alumnosReducer from './slices/alumnos';
+/* import clientesReducer from './slices/clientes'; */
 
-export default configureStore({
-  reducer: {
-    alumnos,
-    clientes,
-  },
+// Redux store configuration
+const reducer = {
+  auth: authReducer,
+  message: messageReducer,
+  alumnos: alumnosReducer,
+  /* clientes: clientesReducer, */
+};
+
+const store = configureStore({
+  reducer,
+  devTools: true,
 });
+
+export default store;

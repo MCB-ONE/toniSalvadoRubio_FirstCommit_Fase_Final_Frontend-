@@ -10,7 +10,7 @@ import AdminSidebar from '../../components/layout/Admin/AdminSidebar';
 import AdminHeader from '../../components/layout/Admin/AdminHeader';
 /** Import styles */
 import './adminPage.scss';
-import { fetchAllClientes } from '../../store/slices/clientes';
+/* import { fetchAllClientes } from '../../store/slices/clientes'; */
 
 const AdminPage = () => {
   const dispatch = useDispatch();
@@ -18,8 +18,9 @@ const AdminPage = () => {
 
   useEffect(() => {
     dispatch(fetchAllAlumnos);
-    dispatch(fetchAllClientes);
+    /* dispatch(fetchAllClientes); */
   }, [dispatch]);
+
   return (
     <div className="admin-page">
       <AdminSidebar />

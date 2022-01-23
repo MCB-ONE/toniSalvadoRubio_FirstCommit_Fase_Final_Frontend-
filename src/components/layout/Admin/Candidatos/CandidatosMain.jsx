@@ -22,7 +22,6 @@ const CandidatosMain = () => {
   useEffect(() => {
     setTimeout(setState(search(alumnosList)));
   }, [query]);
-  console.log(state);
 
   return (
     <div className="candidatos-main">

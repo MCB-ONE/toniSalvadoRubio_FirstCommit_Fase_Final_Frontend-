@@ -1,55 +1,85 @@
-/* eslint-disable no-unused-vars */
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import {
-  Formik, Form, Field, ErrorMessage,
+  Formik,
+  Form,
+  Field,
+  ErrorMessage,
 } from 'formik';
 import * as Yup from 'yup';
-import { useNavigate } from 'react-router-dom';
 import Button from '../button/Button';
+
+/** Slices imports */
+import { login } from '../../store/slices/auth';
+import { clearMessage } from '../../store/slices/message';
 
 /** Initial values for formik */
 const LoginForm = () => {
+  const [loading, setLoading] = useState(false);
+  const { isLoggedIn } = useSelector((state) => state.auth);
+  const { message } = useSelector((state) => state.message);
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(clearMessage());
+  }, [dispatch]);
+
+  useEffect(() => {
+    // Redirection if the user already is logged
+    if (isLoggedIn) {
+      return navigate('/admin');
+    }
+    return null;
+  }, [isLoggedIn]);
+
   const initialValues = {
     email: '',
     password: '',
   };
 
   /** Yup schema config */
-  /*  const registerSchema = Yup.object().shape(
+  const registerSchema = Yup.object().shape(
     {
       email: Yup.string()
-        .email('*Formato de email inválido')
-        .required('*Campo obligatorio'),
+        .email('Formato de email inválido.')
+        .required('Campo obligatorio.'),
       password: Yup.string()
-        .min(8, '*Contraseña muy corta')
-        .required('*Campo obligatorio'),
+        .min(6, 'Contraseña muy corta. Mínimo 6 carácteres.')
+        .required('Campo obligatorio.'),
     },
-  ); */
-  const navigate = useNavigate();
+  );
 
   // Submit handle trigger for user login
-  const authUser = (values) => {
-    // test redirection
-    navigate('/admin');
+  const authUser = (formValue) => {
+    const { email, password } = formValue;
+    setLoading(true);
+
+    dispatch(login({ email, password }))
+      .unwrap()
+      .then(() => {
+        navigate('/admin');
+      })
+      .catch(() => {
+        setLoading(false);
+      });
   };
 
   return (
     <Formik
       initialValues={initialValues}
       // *** Yup Validation Schema ***
-      /* validationSchema={registerSchema} */
+      validationSchema={registerSchema}
       // ** onSubmit Event
-      onSubmit={async (values) => {
-        authUser(values);
+      onSubmit={(formValue) => {
+        authUser(formValue);
       }}
     >
       {({
-        values,
         touched,
         errors,
-        isSubmitting,
-        handleChange,
-        handleBlur,
       }) => (
         <Form>
           <div className="mb-3">
@@ -103,6 +133,19 @@ const LoginForm = () => {
             </div>
           </div>
           <div className="d-grid">
+            {/* // TODO Spinner */}
+            {loading && (
+
+              <span className="spinner">LOADING...</span>
+            )}
+            {/* // TODO Error message */}
+            {message && (
+            <div className="form-group">
+              <div className="alert alert-danger" role="alert">
+                {message}
+              </div>
+            </div>
+            )}
             <Button label="Iniciar Sesión" type="submit" />
           </div>
         </Form>
