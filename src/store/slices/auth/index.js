@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { setMessage } from '../message';
 
@@ -44,12 +45,10 @@ const authSlice = createSlice({
       state.user = action.payload.user;
     },
     [login.rejected]: (state, action) => {
-      console.log(action); // TODO REMOVE use only for Test
       state.isLoggedIn = false;
       state.user = null;
     },
     [logout.fulfilled]: (state, action) => {
-      console.log(action); // TODO REMOVE use only for Test
       state.isLoggedIn = false;
       state.user = null;
     },

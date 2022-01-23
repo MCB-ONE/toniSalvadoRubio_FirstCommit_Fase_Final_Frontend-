@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Routes, Route, Navigate, HashRouter,
+  Routes, Route, Navigate, BrowserRouter,
 } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import AdminPage from '../pages/admin/AdminPage';
@@ -18,7 +18,7 @@ import store from '../store/index';
 const App = () => {
   return (
     <Provider store={store}>
-      <HashRouter>
+      <BrowserRouter>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/admin/*" element={<AdminPage />}>
@@ -29,7 +29,7 @@ const App = () => {
             <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>
-      </HashRouter>
+      </BrowserRouter>
     </Provider>
 
   );

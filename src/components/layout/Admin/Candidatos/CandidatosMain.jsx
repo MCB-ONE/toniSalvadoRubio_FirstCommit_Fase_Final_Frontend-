@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchAllAlumnos } from '../../../../store/slices/alumnos';
 import SortableDataTable from '../../../sortableDataTable/SortableDataTable';
 import TableNavbar from '../TableNavbar';
 
@@ -8,6 +9,7 @@ const CandidatosMain = () => {
   const [state, setState] = useState(alumnosList);
   const [query, setQuery] = useState('');
   const searchableColumns = ['nombre', 'ubicación', 'estado'];
+  const dispatch = useDispatch();
 
   // Search method
   const search = (data) => {
@@ -18,10 +20,20 @@ const CandidatosMain = () => {
         .indexOf(query.toLowerCase()) > -1,
     ));
   };
+  // UseEffect to dispatch getAllAlumnos
+  useEffect(() => {
+    dispatch(fetchAllAlumnos);
+  }, [dispatch]);
+  // UseEffect to dispatch getAllAlumnos
+  useEffect(() => {
+    setState(alumnosList);
+  }, [alumnosList]);
   // UseEffect to dispatch search filter
   useEffect(() => {
     setTimeout(setState(search(alumnosList)));
   }, [query]);
+
+  console.log(alumnosList);
 
   return (
     <div className="candidatos-main">

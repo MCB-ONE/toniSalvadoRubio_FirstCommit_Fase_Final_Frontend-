@@ -23,7 +23,6 @@ const AdminHeader = () => {
   };
 
   const logoutHandler = useCallback(() => {
-    console.log('Dispatched logout');
     dispatch(logout());
   }, [dispatch]);
 
