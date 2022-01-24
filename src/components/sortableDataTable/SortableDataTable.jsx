@@ -11,16 +11,18 @@ const SortableDataTable = ({ data, columns }) => {
   // Use custom hook
   const { items, requestSort } = useSortableData(data);
   // Conditional styles for estado labels
-  const renderSwitch = (value) => {
+  const renderSwitchClass = (value) => {
     switch (value) {
-      case 'Contratado':
-        return 'contratado';
-      case 'Preseleccionado':
-        return 'preseleccionado';
-      case 'PDTE. Ofertas':
-        return 'pendiente';
+      case 'contratado':
+        return 'success';
+      case 'en_proceso':
+        return 'pending';
+      case 'libre':
+        return 'free';
+      case 'descartado':
+        return 'error';
       default:
-        return 'contratado';
+        return 'free';
     }
   };
 
@@ -30,13 +32,15 @@ const SortableDataTable = ({ data, columns }) => {
         <thead>
           <tr>
             {columns.map((col) => {
-              const { label, sortable, isTag } = col;
+              const {
+                label, row, sortable, isTag,
+              } = col;
               return (
                 <TableHeader
-                  key={label}
+                  key={row}
                   label={label}
                   sortable={sortable}
-                  onClick={() => requestSort({ label, isTag })}
+                  onClick={() => requestSort({ row, isTag })}
                 />
               );
             })}
@@ -50,53 +54,46 @@ const SortableDataTable = ({ data, columns }) => {
                 return column.isTag
                   ? (
                     <td key={item[column.label]} className="tags">
-                      {column.link
-                        ? (
-                          <Link to={column.link.to}>
-                            <TagsList data={item[column.label]} />
-                          </Link>
-                        ) : (
-                          <TagsList data={item[column.label]} />
-                        )}
+                      <TagsList data={item[column.row]} />
                     </td>
                   )
                   // eslint-disable-next-line no-nested-ternary
                   : column.isState
                     ? (
-                      <td className="estado" key={item[column.label]}>
+                      <td className="estado" key={item[column.row]}>
                         {column.link
                           ? (
                             <Link to={column.link.to}>
-                              <span>{item[column.label]}</span>
+                              <span>{item[column.row]}</span>
                             </Link>
                           ) : (
-                            <span className={renderSwitch(item[column.label])}>
-                              {item[column.label]}
+                            <span className={renderSwitchClass(item[column.row])}>
+                              {item[column.row]}
                             </span>
                           )}
                       </td>
                     ) : column.isNum
                       ? (
-                        <td key={item[column.label]} className="num">
+                        <td key={item[column.row]} className="num">
                           {column.link
                             ? (
                               <Link to={column.link.to}>
-                                {item[column.label]}
+                                {item[column.row]}
                               </Link>
                             ) : (
-                              <>{item[column.label]}</>
+                              <>{item[column.row]}</>
                             )}
                         </td>
                       )
                       : (
-                        <td key={item[column.label]}>
+                        <td key={item[column.row]}>
                           {column.link
                             ? (
                               <Link to={column.link.to}>
-                                {item[column.label]}
+                                {item[column.row]}
                               </Link>
                             ) : (
-                              <>{item[column.label]}</>
+                              <>{item[column.row]}</>
                             )}
                         </td>
                       );

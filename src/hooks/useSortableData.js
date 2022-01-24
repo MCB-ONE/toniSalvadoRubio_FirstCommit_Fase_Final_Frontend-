@@ -7,19 +7,19 @@ const useSortableData = (items, config = null) => {
   const sortedItems = useMemo(() => {
     const sortableItems = [...items];
     if (sortConfig !== null) {
-      const sortKey = sortConfig.key.label;
+      const sortKey = sortConfig.key.row;
       const { direction } = sortConfig;
       if (sortConfig.key.isTag) {
         sortableItems.sort((a, b) => {
           if (direction === 'ascending') {
-            if (a[sortKey][0] > b[sortKey][0]) {
+            if (a[sortKey][0].nombre > b[sortKey][0].nombre) {
               return 1;
             }
-            if (a[sortKey][0] < b[sortKey][0]) return -1;
+            if (a[sortKey][0].nombre < b[sortKey][0].nombre) return -1;
             return 0;
           }
-          if (a[sortKey][0] < b[sortKey][0]) return 1;
-          if (a[sortKey][0] > b[sortKey][0]) return -1;
+          if (a[sortKey][0].nombre < b[sortKey][0].nombre) return 1;
+          if (a[sortKey][0].nombre > b[sortKey][0].nombre) return -1;
           return 0;
         });
       } else {
@@ -29,8 +29,8 @@ const useSortableData = (items, config = null) => {
             if (removeAccents(a[sortKey]) < b[sortKey]) return -1;
             return 0;
           }
-          if (removeAccents(a[sortKey][0]) < removeAccents(b[sortKey][0])) return 1;
-          if (removeAccents(a[sortKey][0]) > removeAccents(b[sortKey][0])) return -1;
+          if (removeAccents(a[sortKey][0].nombre) < removeAccents(b[sortKey][0].nombre)) return 1;
+          if (removeAccents(a[sortKey][0].nombre) > removeAccents(b[sortKey][0].nombre)) return -1;
           return 0;
         });
       }
@@ -42,7 +42,7 @@ const useSortableData = (items, config = null) => {
     let direction = 'ascending';
     if (
       sortConfig
-      && sortConfig.key.label === key.label
+      && sortConfig.key.row === key.row
       && sortConfig.direction === 'ascending'
     ) {
       direction = 'descending';

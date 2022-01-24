@@ -20,7 +20,7 @@ const App = () => {
     <Provider store={store}>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/app/*" element={<HomePage />} />
           <Route path="/admin/*" element={<AdminPage />}>
             <Route path="" element={<Navigate to="/admin/candidatos" />} />
             <Route path="candidatos/*" element={<CandidatosLayout />} />
@@ -28,6 +28,7 @@ const App = () => {
             <Route path="clientes" element={<ClientesLayout />} />
             <Route path="*" element={<NotFoundPage />} />
           </Route>
+          <Route path="*" element={<HomePage />} />
         </Routes>
       </BrowserRouter>
     </Provider>

@@ -1,25 +1,23 @@
 import React, { useCallback, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { GoChevronDown } from 'react-icons/go';
 import { IoSettingsOutline, IoExitOutline, IoPersonOutline } from 'react-icons/io5';
 import { FaRegBell } from 'react-icons/fa';
-
-import { useNavigate } from 'react-router-dom';
 import Dropdown from '../../dropdown/Dropdown';
 import FilterSearch from '../../filterSearch/FilterSearch';
 import { logout } from '../../../store/slices/auth';
 
 const AdminHeader = () => {
   const [dropdown, setDropdown] = useState(false);
+  const userData = useSelector((state) => state.auth.user.data);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+
   const onMouseEnter = () => {
     setDropdown(true);
   };
 
   const onMouseLeave = () => {
     setDropdown(false);
-    navigate('/');
   };
 
   const logoutHandler = useCallback(() => {
@@ -38,12 +36,12 @@ const AdminHeader = () => {
         onMouseLeave={onMouseLeave}
       >
         <div className="profile-img">
-          <h4>NA</h4>
+          <img src="/images/profile-default-img.jpg" alt="profile" />
         </div>
         <h3
           className="name"
         >
-          Nombre
+          {userData ? userData.fullName : 'Name'}
         </h3>
         <GoChevronDown className="dropdown-button" />
         {dropdown && (

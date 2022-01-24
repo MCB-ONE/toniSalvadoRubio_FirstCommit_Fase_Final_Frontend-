@@ -4,14 +4,23 @@ import PropTypes from 'prop-types';
 const TagsList = ({ data }) => {
   return (
     <>
-      <span key={0}>{data[0]}</span>
-      <span key={1}>{data[1]}</span>
-      {data.length >= 3 ? (
-        <span key={2} className="num">
-          +
-          {data.length - 2}
-        </span>
-      ) : null}
+      {data && (
+        <>
+          {
+            data.map((tag, index) => {
+              if (index < 2) return <span key={tag.id}>{tag.nombre}</span>;
+              return null;
+            })
+          }
+          {
+            data.length > 2 && (
+              <span key="plus" className="num">
+                {`+${data.length - 2}`}
+              </span>
+            )
+          }
+        </>
+      )}
     </>
   );
 };

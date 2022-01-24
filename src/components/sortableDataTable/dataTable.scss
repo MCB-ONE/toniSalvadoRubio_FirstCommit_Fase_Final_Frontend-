@@ -63,14 +63,17 @@
                 margin-right: 6px;
                 border-radius: 40px;
             }
-            .contratado{
-                background-color: #36E4A6;
+            .success{
+                background-color: $cm-primary;
             }
-            .preseleccionado{
-                background-color: #3684FA;
+            .error{
+                background-color: $cm-red;
             }
-            .pendiente{
-                background-color: #3FCBF8;
+            .free{
+                background-color: $cm-secondary;
+            }
+            .pending{
+                background-color: $cm-tertiary;
             }
         }
     }

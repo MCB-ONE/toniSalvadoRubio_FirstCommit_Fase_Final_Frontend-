@@ -7,7 +7,7 @@ const detalleCandidatoMain = () => {
   return (
     <div className="main col-8 pe-0">
       <div className="info">
-        <img src="/images/profile-img.jpeg" alt="imagen de perfil" />
+        <img src="/images/candidate-default-img.jpeg" alt="imagen de perfil" />
         <div className="profile row">
           <div className="profile-location col-auto">
             <h1>Nombre Alumno</h1>
