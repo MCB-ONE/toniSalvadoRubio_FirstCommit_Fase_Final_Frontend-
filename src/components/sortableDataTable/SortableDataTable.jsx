@@ -26,6 +26,54 @@ const SortableDataTable = ({ data, columns }) => {
     }
   };
 
+  const renderRows = (column, item, row, isState, isTag, isDouble, isLink, isNum) => {
+    if (isTag) {
+      const elements = [];
+      item[column.row].forEach((element) => {
+        elements.push(element);
+      });
+      return (
+        <td key="tags" className="tags">
+          <TagsList data={elements} />
+        </td>
+      );
+    } if (isState) {
+      return (
+        <td className="estado" key={item[column.row]}>
+          <span className={renderSwitchClass(item[column.row])}>
+            {item[column.row]}
+          </span>
+        </td>
+      );
+    }
+    if (isLink) {
+      return (
+        <td key={item[column.row]}>
+          <Link to="id">
+            {item[column.row]}
+          </Link>
+        </td>
+      );
+    }
+    if (isDouble) {
+      const fields = [];
+      const fieldsValues = [];
+      column.row.forEach((element) => {
+        // Extract fields to show
+        fields.push(element);
+      });
+      fields.forEach((el) => {
+        // Extract the values of each field
+        fieldsValues.push(item[el]);
+      });
+      return <td>{`${fieldsValues[0]}, ${fieldsValues[1]}`}</td>;
+    }
+    if (isNum) {
+      return <td key={item[column.label]} className="num">{item[column.row]}</td>;
+    }
+    return <td>{item[column.row]}</td>;
+  };
+
   return (
     <div className="cm-table">
       <table className="table">
@@ -33,14 +81,14 @@ const SortableDataTable = ({ data, columns }) => {
           <tr>
             {columns.map((col) => {
               const {
-                label, row, sortable, isTag,
+                label, row, sortable, isTag, isDouble,
               } = col;
               return (
                 <TableHeader
                   key={row}
                   label={label}
                   sortable={sortable}
-                  onClick={() => requestSort({ row, isTag })}
+                  onClick={() => requestSort({ row, isTag, isDouble })}
                 />
               );
             })}
@@ -50,53 +98,10 @@ const SortableDataTable = ({ data, columns }) => {
           {items.map((item) => (
             <tr key={item.id}>
               {columns.map((column) => {
-                // eslint-disable-next-line no-nested-ternary
-                return column.isTag
-                  ? (
-                    <td key={item[column.label]} className="tags">
-                      <TagsList data={item[column.row]} />
-                    </td>
-                  )
-                  // eslint-disable-next-line no-nested-ternary
-                  : column.isState
-                    ? (
-                      <td className="estado" key={item[column.row]}>
-                        {column.link
-                          ? (
-                            <Link to={column.link.to}>
-                              <span>{item[column.row]}</span>
-                            </Link>
-                          ) : (
-                            <span className={renderSwitchClass(item[column.row])}>
-                              {item[column.row]}
-                            </span>
-                          )}
-                      </td>
-                    ) : column.isNum
-                      ? (
-                        <td key={item[column.row]} className="num">
-                          {column.link
-                            ? (
-                              <Link to={column.link.to}>
-                                {item[column.row]}
-                              </Link>
-                            ) : (
-                              <>{item[column.row]}</>
-                            )}
-                        </td>
-                      )
-                      : (
-                        <td key={item[column.row]}>
-                          {column.link
-                            ? (
-                              <Link to={column.link.to}>
-                                {item[column.row]}
-                              </Link>
-                            ) : (
-                              <>{item[column.row]}</>
-                            )}
-                        </td>
-                      );
+                const {
+                  row, isState, isTag, isDouble, isLink, isNum,
+                } = column;
+                return renderRows(column, item, row, isState, isTag, isDouble, isLink, isNum);
               })}
             </tr>
           ))}

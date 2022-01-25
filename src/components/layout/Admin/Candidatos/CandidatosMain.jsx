@@ -7,41 +7,62 @@ import TableNavbar from '../TableNavbar';
 
 const CandidatosMain = () => {
   const dispatch = useDispatch();
-  const alumnosList = useSelector((state) => state.candidatos);
-  /* const [state, setState] = useState(); */
+  const candidatosList = useSelector((state) => state.candidatos);
+  const [candidatosData, setCandidatosData] = useState(candidatosList);
+  const [query, setQuery] = useState('');
+  // Setting a searchable column list
+  const searchableColumns = ['nombreCompleto', 'estado', 'ciudad'];
 
-  const initFetch = useCallback(() => {
-    dispatch(getAllCandidatos());
-  }, [dispatch]);
+  // Search method
+  const search = (rows) => {
+    return rows.filter((row) => searchableColumns.some(
+      (column) => row[column]
+        .toString()
+        .toLowerCase()
+        .indexOf(query.toLowerCase()) > -1,
+    ));
+  };
 
   useEffect(() => {
-    initFetch();
-  }, [initFetch]);
+    dispatch(getAllCandidatos());
+  }, []);
 
+  useEffect(() => {
+    setCandidatosData(candidatosList);
+  }, [candidatosList]);
   return (
     <div className="candidatos-main">
-      {alumnosList.list != null
+      {candidatosData.list
         ? (
-          <SortableDataTable
-            data={alumnosList.list}
-            columns={[
-              {
-                label: 'nombre', row: 'nombreCompleto', sortable: true, link: { to: 'id' },
-              },
-              {
-                label: 'ubicación', row: ['ciudad', 'País'], sortable: true, double: true,
-              },
-              {
-                label: 'teléfono', row: 'telefono', sortable: false, isNum: true,
-              },
-              {
-                label: 'tecnologías', row: 'tecnologias', sortable: true, isTag: true,
-              },
-              {
-                label: 'estado', row: 'estado', sortable: true, isState: true,
-              },
-            ]}
-          />
+          <>
+            <TableNavbar
+              title="Candidatos"
+              searchPlaceholder="Buscar por Nombre, ciudad o palabra clave..."
+              query={query}
+              setQuery={setQuery}
+              buttonLabel="Añadir candidato"
+            />
+            <SortableDataTable
+              data={search(candidatosData.list)}
+              columns={[
+                {
+                  label: 'nombre', row: 'nombreCompleto', sortable: true, isNum: false, isState: false, isTag: false, isDouble: false,
+                },
+                {
+                  label: 'ubicación', row: ['ciudad', 'pais'], sortable: true, isNum: false, isState: false, isTag: false, isDouble: true,
+                },
+                {
+                  label: 'teléfono', row: 'telefono', sortable: false, isNum: true, isState: false, isTag: false, isDouble: false,
+                },
+                {
+                  label: 'tecnologías', row: 'tecnologias', sortable: true, isState: false, isNum: false, isTag: true, isDouble: false,
+                },
+                {
+                  label: 'estado', row: 'estado', sortable: true, isState: true, isNum: false, isTag: false, isDouble: false,
+                },
+              ]}
+            />
+          </>
         ) : 'No hay data'}
     </div>
   );

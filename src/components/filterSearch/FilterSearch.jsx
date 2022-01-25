@@ -11,7 +11,6 @@ const FilterSearch = ({
   const ms = marginStart ? 'ms' : '';
   const formStyle = `form-inline search ${ms}`;
   const inputStyle = `form-control ${bgColor}`;
-
   return (
     <form className={formStyle}>
       <GoSearch />

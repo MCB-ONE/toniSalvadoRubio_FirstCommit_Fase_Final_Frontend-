@@ -42,9 +42,9 @@ export const getCandidatoById = createAsyncThunk(
 
 // Slice initial state
 const initialState = {
-  list: null,
+  list: false,
   isLoading: false,
-  error: null,
+  error: false,
 };
 
 const candidatoSlice = createSlice({
