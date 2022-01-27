@@ -30,6 +30,7 @@ const CandidatosMain = () => {
   useEffect(() => {
     setCandidatosData(candidatosList);
   }, [candidatosList]);
+
   return (
     <div className="candidatos-main">
       {candidatosData.list
@@ -46,7 +47,7 @@ const CandidatosMain = () => {
               data={search(candidatosData.list)}
               columns={[
                 {
-                  label: 'nombre', row: 'nombreCompleto', sortable: true, isNum: false, isState: false, isTag: false, isDouble: false,
+                  label: 'nombre', row: 'nombreCompleto', sortable: true, isLink: true, isNum: false, isState: false, isTag: false, isDouble: false,
                 },
                 {
                   label: 'ubicación', row: ['ciudad', 'pais'], sortable: true, isNum: false, isState: false, isTag: false, isDouble: true,

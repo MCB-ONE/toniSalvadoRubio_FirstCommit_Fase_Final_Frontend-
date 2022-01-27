@@ -1,15 +1,15 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { setMessage } from '../message';
 
-import CandidatosService from '../../../services/candidatos/candidato.service';
+import TecnologiasService from '../../../services/tecnologias/tecnologias.service';
 
 // CRUD thunk middlewares
-export const getAllCandidatos = createAsyncThunk(
-  'candidatos/fetchAll',
+export const getAllTecnologias = createAsyncThunk(
+  'tecnologias/fetchAll',
   async (thunkAPI) => {
     try {
-      const data = await CandidatosService.getAllCandidatos();
-      return { candidatos: data.data.data.data };
+      const data = await TecnologiasService.getAllTecnologias();
+      return { tecnologias: data.data.data.data };
     } catch (error) {
       const message = (error.response
                 && error.response.data
@@ -22,12 +22,12 @@ export const getAllCandidatos = createAsyncThunk(
   },
 );
 
-export const getCandidatoById = createAsyncThunk(
-  'candidatos/fetchById',
+export const getTecnologiaById = createAsyncThunk(
+  'tecnologias/fetchById',
   async (id, thunkAPI) => {
     try {
-      const data = await CandidatosService.getCandidatosById(id);
-      return { candidato: data.data.data };
+      const data = await TecnologiasService.getTecnologiasById(id);
+      return { tecnologia: data.data.data };
     } catch (error) {
       const message = (error.response
                   && error.response.data
@@ -41,9 +41,9 @@ export const getCandidatoById = createAsyncThunk(
 );
 
 // Sync reducer
-export const cleanCandidatoDetail = () => {
+export const cleanTecnologiaDetail = () => {
   // eslint-disable-next-line no-undef
-  return dispatch(cleanCandidatoDetail(false));
+  return dispatch(cleanTecnologiaDetail(false));
 };
 
 // Slice initial state
@@ -54,8 +54,8 @@ const initialState = {
   error: false,
 };
 
-const candidatoSlice = createSlice({
-  name: 'candidatos',
+const tecnologiasSlice = createSlice({
+  name: 'tecnologias',
   initialState,
   reducers: {
     resetDetail: (state) => {
@@ -63,32 +63,32 @@ const candidatoSlice = createSlice({
     },
   },
   extraReducers: {
-    [getAllCandidatos.pending]: (state) => {
+    [getAllTecnologias.pending]: (state) => {
       state.isLoading = true;
     },
-    [getAllCandidatos.fulfilled]: (state, action) => {
+    [getAllTecnologias.fulfilled]: (state, action) => {
       state.isLoading = false;
-      state.list = action.payload.candidatos;
+      state.list = action.payload.tecnologias;
     },
-    [getAllCandidatos.rejected]: (state, action) => {
+    [getAllTecnologias.rejected]: (state, action) => {
       state.isLoading = false;
       state.error = [action];
     },
-    // CandidatoByIdReducers
-    [getCandidatoById.pending]: (state) => {
+    // TecnologiasByIdReducers
+    [getTecnologiaById.pending]: (state) => {
       state.loading = true;
     },
-    [getCandidatoById.fulfilled]: (state, action) => {
+    [getTecnologiaById.fulfilled]: (state, action) => {
       state.loading = false;
-      state.detail = [action.payload.candidato];
+      state.detail = [action.payload.tecnologia];
     },
-    [getCandidatoById.rejected]: (state, action) => {
+    [getTecnologiaById.rejected]: (state, action) => {
       state.loading = false;
       state.error = [action.payload];
     },
   },
 });
 // Destructure and export the plain action creators
-export const { resetDetail } = candidatoSlice.actions;
-const { reducer } = candidatoSlice;
+export const { resetDetail } = tecnologiasSlice.actions;
+const { reducer } = tecnologiasSlice;
 export default reducer;

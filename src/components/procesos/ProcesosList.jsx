@@ -1,10 +1,10 @@
 import React from 'react';
-import json from '../../data/procesos.json';
-
+import PropTypes from 'prop-types';
 /** Styles */
 import './procesosList.scss';
 
-const ProcesosList = () => {
+const ProcesosList = ({ procesos }) => {
+  console.log(procesos);
   // Conditional styles for estado labels
   const renderSwitch = (value) => {
     switch (value) {
@@ -22,7 +22,6 @@ const ProcesosList = () => {
         return 'pendiente';
     }
   };
-  const procesos = json;
   return (
     <div className="procesos-list">
       {procesos && procesos.map((proceso) => {
@@ -47,6 +46,10 @@ const ProcesosList = () => {
       })}
     </div>
   );
+};
+
+ProcesosList.propTypes = {
+  procesos: PropTypes.array.isRequired,
 };
 
 export default ProcesosList;

@@ -49,7 +49,7 @@ const SortableDataTable = ({ data, columns }) => {
     if (isLink) {
       return (
         <td key={item[column.row]}>
-          <Link to="id">
+          <Link to={`${item.id}`}>
             {item[column.row]}
           </Link>
         </td>
