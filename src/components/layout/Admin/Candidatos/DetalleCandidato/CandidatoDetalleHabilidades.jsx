@@ -1,36 +1,37 @@
-import React, { useEffect, useState } from 'react';
+/* eslint-disable prefer-destructuring */
+/* eslint-disable no-unused-vars */
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllTecnologias } from '../../../../../store/slices/tecnologias';
 import TagSelector from '../../../../tags/TagSelector';
 
 const CandidatoDetalleHabilidades = () => {
-  const candidatoDetail = useSelector((state) => state.candidatos);
-  const tecnologias = useSelector((state) => state.tecnologias);
-  const [candidatoData, setCandidatoData] = useState(false);
+  const tecnologiasState = useSelector((state) => state.tecnologias);
+  const candidatoState = useSelector((state) => state.candidatos);
+  let candidatoDetail = false;
+  let tecnologias = false;
+  if (candidatoState.detail && tecnologiasState.list) {
+    candidatoDetail = candidatoState.detail[0];
+    tecnologias = tecnologiasState.list;
+  }
   const dispatch = useDispatch();
 
   // Dispathc getAllTec
   useEffect(() => {
     dispatch(getAllTecnologias());
-  }, []);
-
-  // Setting candidato data state
-  useEffect(() => {
-    if (candidatoDetail.detail) {
-      setCandidatoData(candidatoDetail.detail[0]);
-    } else {
-      setCandidatoData(false);
-    }
-  }, [candidatoDetail]);
+  }, [candidatoState]);
   return (
     <div className="candidato-habilidades row">
       {
-        tecnologias.list && (
-        <>
-          <TagSelector options={tecnologias.list} defaultSelectedTags={candidatoData.tecnologias} />
-          {/*  //TODO UPDATE IDIOMS SELECTOR */}
-          {/* <TagSelector options={idiomas.list} /> */}
-        </>
+        tecnologias && (
+          <>
+            <TagSelector
+              options={tecnologias}
+              defaultSelectedTags={candidatoDetail.tecnologias}
+            />
+            {/*  //TODO UPDATE IDIOMS SELECTOR */}
+            {/* <TagSelector options={idiomas.list} /> */}
+          </>
         )
       }
     </div>

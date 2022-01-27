@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { IoMdAdd } from 'react-icons/io';
 import Button from '../button/Button';
@@ -8,20 +8,17 @@ import PdfViewer from '../pdfViewer/PdfViewer';
 
 /** Style */
 import './tab.scss';
+import Spinner from '../spinner/Spinner';
 
 const Tab = () => {
   const [toggleState, setToggleState] = useState(1);
-  const candidatoDetail = useSelector((state) => state.candidatos);
-  const [candidatoData, setCandidatoData] = useState(false);
+  const candidatoState = useSelector((state) => state.candidatos);
+  let candidatoDetail = false;
+  if (candidatoState.detail) {
+    // eslint-disable-next-line prefer-destructuring
+    candidatoDetail = candidatoState.detail[0];
+  }
 
-  // Dispathc getCandidatoById
-  useEffect(() => {
-    if (candidatoDetail.detail) {
-      setCandidatoData(candidatoDetail.detail[0]);
-    } else {
-      setCandidatoData(false);
-    }
-  }, [candidatoDetail]);
   const toggleTab = (index) => {
     setToggleState(index);
   };
@@ -52,7 +49,7 @@ const Tab = () => {
               >
                 Procesos
                 {' '}
-                {candidatoData && <span>{candidatoData.ofertas.length}</span>}
+                {candidatoDetail && <span>{candidatoDetail.ofertas.length}</span>}
               </button>
             </div>
             <div className="content-tabs">
@@ -77,8 +74,8 @@ const Tab = () => {
                   <IoMdAdd />
                 </Button>
                 {
-                  candidatoData && candidatoData.ofertas.length > 0 ? (
-                    <ProcesosList procesos={candidatoData.ofertas} />
+                  candidatoDetail && candidatoDetail.ofertas.length > 0 ? (
+                    <ProcesosList procesos={candidatoDetail.ofertas} />
                   )
                     : <p className="mt-3">Actualmente este candidato no tiene procesos de selección activos.</p>
                 }
@@ -86,7 +83,11 @@ const Tab = () => {
             </div>
           </>
 
-        ) : null
+        ) : (
+          <div className="spinner-container">
+            <Spinner />
+          </div>
+        )
       }
     </div>
   );

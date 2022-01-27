@@ -40,6 +40,25 @@ export const getCandidatoById = createAsyncThunk(
   },
 );
 
+export const createCandidato = createAsyncThunk(
+  'candidatos/create',
+  async (candidato, thunkAPI) => {
+    try {
+      console.log('Create Thunk try block');
+      const data = await CandidatosService.createCandidato(candidato);
+      return { candidato: data };
+    } catch (error) {
+      const message = (error.response
+                  && error.response.data
+                  && error.response.data.message)
+                || error.message
+                || error.toString();
+      thunkAPI.dispatch(setMessage(message));
+      return error;
+    }
+  },
+);
+
 // Sync reducer
 export const cleanCandidatoDetail = () => {
   // eslint-disable-next-line no-undef
@@ -86,9 +105,21 @@ const candidatoSlice = createSlice({
       state.loading = false;
       state.error = [action.payload];
     },
+    // Candidato create async reducers
+    [createCandidato.fulfilled]: (state, action) => {
+      state.loading = false;
+      console.log('Create reducer fulifield:');
+      console.log(action.payload.candidato);
+      state.detail = [action.payload.candidato];
+    },
+    [createCandidato.rejected]: (state, action) => {
+      state.loading = false;
+      state.error = [action.payload];
+    },
   },
 });
 // Destructure and export the plain action creators
 export const { resetDetail } = candidatoSlice.actions;
+export const getSelectedCndidato = (state) => state.detail;
 const { reducer } = candidatoSlice;
 export default reducer;

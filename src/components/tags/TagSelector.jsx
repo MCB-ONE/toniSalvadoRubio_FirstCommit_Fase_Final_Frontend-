@@ -5,9 +5,11 @@ import { CgClose } from 'react-icons/cg';
 import Select from 'react-select';
 
 const TagSelector = ({ options, defaultSelectedTags }) => {
+  // Generate curret candidato tecnologies
   const defaultSelectedOptions = defaultSelectedTags.map((defOp) => {
     return { value: defOp.id, label: defOp.nombre };
   });
+  // Generate options to Select component
   const selectOptions = options.map((option) => {
     return { value: option.id, label: option.nombre };
   });

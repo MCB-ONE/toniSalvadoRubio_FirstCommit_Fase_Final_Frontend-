@@ -9,6 +9,7 @@ import Button from '../button/Button';
 const CandidatoCreateForm = () => {
   const [selectedTags, setSelectedTags] = useState(null);
 
+  // Tags methods
   const handleTagsChange = (e) => {
     setSelectedTags(e);
   };
@@ -18,6 +19,48 @@ const CandidatoCreateForm = () => {
       return tag.id !== value;
     });
     setSelectedTags(newState);
+  };
+
+  // Formik config
+  const initialValues = {
+    nombreCompleto: '',
+    pais: '',
+    ciudad: '',
+    telefono: '',
+    email: '',
+    remoto: '',
+    disponibilidadTraslado: '',
+    enlaceLinkedin: '',
+    avatar: '',
+    cv: '',
+    tecnologias: '',
+  };
+
+  /** Yup schema config */
+  const registerSchema = Yup.object().shape(
+    {
+      email: Yup.string()
+        .email('Formato de email inválido.')
+        .required('Campo obligatorio.'),
+      password: Yup.string()
+        .min(6, 'Contraseña muy corta. Mínimo 6 carácteres.')
+        .required('Campo obligatorio.'),
+    },
+  );
+
+  // Submit handle trigger
+  const authUser = (formValue) => {
+    const { email, password } = formValue;
+    setLoading(true);
+
+    dispatch(login({ email, password }))
+      .unwrap()
+      .then(() => {
+        navigate('/admin');
+      })
+      .catch(() => {
+        setLoading(false);
+      });
   };
 
   return (

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { IoLocationOutline } from 'react-icons/io5';
@@ -6,17 +7,12 @@ import Spinner from '../../../../spinner/Spinner';
 import CandidatoInfoForm from '../../../../forms/CandidatoInfoForm';
 
 const detalleCandidatoMain = () => {
-  const candidatoDetail = useSelector((state) => state.candidatos);
-  const [candidatoData, setCandidatoData] = useState(false);
-
-  // Dispathc getCandidatoById
-  useEffect(() => {
-    if (candidatoDetail.detail) {
-      setCandidatoData(candidatoDetail.detail[0]);
-    } else {
-      setCandidatoData(false);
-    }
-  }, [candidatoDetail]);
+  const candidatoState = useSelector((state) => state.candidatos);
+  let candidatoDetail = false;
+  if (candidatoState.detail) {
+    // eslint-disable-next-line prefer-destructuring
+    candidatoDetail = candidatoState.detail[0];
+  }
 
   const renderSwitchClass = (value) => {
     switch (value) {
@@ -34,36 +30,37 @@ const detalleCandidatoMain = () => {
   };
   return (
     <div className="main col-8 pe-0">
-      { candidatoData ? (
+      { candidatoDetail ? (
         <>
           <div className="info">
             <img src="/images/candidate-default-img.jpeg" alt="imagen de perfil" />
             <div className="profile row">
               <div className="profile-location col-auto">
-                <h1>{candidatoData.nombreCompleto}</h1>
+                <h1>{candidatoDetail.nombreCompleto}</h1>
                 <div>
                   <IoLocationOutline />
                   <p>
-                    {candidatoData.ciudad}
+                    {candidatoDetail.ciudad}
                     ,
                     {' '}
-                    {candidatoData.pais}
+                    {candidatoDetail.pais}
                   </p>
                 </div>
                 <div>
                   <MdMyLocation />
                   <p>
-                    {candidatoData.remoto ? 'En remoto' : 'Presencial'}
+                    {candidatoDetail.remoto ? 'En remoto' : 'Presencial'}
                     ,
                     {' '}
-                    {candidatoData.disponibilidadTraslado ? 'Traslado disponible' : 'Sin traslado'}
+                    {candidatoDetail.disponibilidadTraslado
+                      ? 'Traslado disponible' : 'Sin traslado'}
                   </p>
                 </div>
               </div>
               <div className="profile-status col-auto estado">
                 <p>Estado del candidato:</p>
-                <span className={renderSwitchClass(candidatoData.estado)}>
-                  {candidatoData.estado}
+                <span className={renderSwitchClass(candidatoDetail.estado)}>
+                  {candidatoDetail.estado}
                 </span>
               </div>
             </div>

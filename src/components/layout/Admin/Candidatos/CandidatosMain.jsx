@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllCandidatos } from '../../../../store/slices/candidatos';
+import { getAllCandidatos, resetDetail } from '../../../../store/slices/candidatos';
 import SortableDataTable from '../../../sortableDataTable/SortableDataTable';
 import TableNavbar from '../TableNavbar';
 
@@ -25,6 +25,7 @@ const CandidatosMain = () => {
 
   useEffect(() => {
     dispatch(getAllCandidatos());
+    dispatch(resetDetail());
   }, []);
 
   useEffect(() => {
@@ -64,7 +65,11 @@ const CandidatosMain = () => {
               ]}
             />
           </>
-        ) : 'No hay data'}
+        ) : (
+          <div className="data-error">
+            <h2>No hay candidatos.</h2>
+          </div>
+        ) }
     </div>
   );
 };
