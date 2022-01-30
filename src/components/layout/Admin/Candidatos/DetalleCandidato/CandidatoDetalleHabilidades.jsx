@@ -25,9 +25,12 @@ const CandidatoDetalleHabilidades = () => {
       {
         tecnologias && (
           <>
+            {console.log(candidatoDetail.tecnologias)}
             <TagSelector
               options={tecnologias}
               defaultSelectedTags={candidatoDetail.tecnologias}
+              field="tecnologias"
+              candidatoId={candidatoDetail.id}
             />
             {/*  //TODO UPDATE IDIOMS SELECTOR */}
             {/* <TagSelector options={idiomas.list} /> */}

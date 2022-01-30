@@ -45,8 +45,53 @@ export const createCandidato = createAsyncThunk(
   async (candidato, thunkAPI) => {
     try {
       console.log('Create Thunk try block');
+      console.log(candidato);
       const data = await CandidatosService.createCandidato(candidato);
-      return { candidato: data };
+      return { candidato: data.data };
+    } catch (error) {
+      const message = (error.response
+                  && error.response.data
+                  && error.response.data.message)
+                || error.message
+                || error.toString();
+      thunkAPI.dispatch(setMessage(message));
+      return error;
+    }
+  },
+);
+
+export const updateCandidato = createAsyncThunk(
+  'candidatos/update',
+  // eslint-disable-next-line no-unused-vars
+  async (updateData, thunkAPI) => {
+    try {
+      console.log('Update Thunk try block');
+      console.log(updateData);
+      await CandidatosService.updateCandidato(updateData);
+      const data = await CandidatosService.getCandidatosById(updateData.id);
+      return { candidato: data.data.data };
+    } catch (error) {
+      const message = (error.response
+                  && error.response.data
+                  && error.response.data.message)
+                || error.message
+                || error.toString();
+      thunkAPI.dispatch(setMessage(message));
+      return error;
+    }
+  },
+);
+
+export const updateCandidatoTags = createAsyncThunk(
+  'candidatos/updateTags',
+  // eslint-disable-next-line no-unused-vars
+  async (updateData, thunkAPI) => {
+    try {
+      console.log('Update TAGS Thunk try block');
+      console.log(updateData);
+      await CandidatosService.updateCandidatoTag(updateData);
+      const data = await CandidatosService.getCandidatosById(updateData.id);
+      return { candidato: data.data.data };
     } catch (error) {
       const message = (error.response
                   && error.response.data
@@ -110,9 +155,31 @@ const candidatoSlice = createSlice({
       state.loading = false;
       console.log('Create reducer fulifield:');
       console.log(action.payload.candidato);
-      state.detail = [action.payload.candidato];
+      state.detail = [action.payload];
     },
     [createCandidato.rejected]: (state, action) => {
+      state.loading = false;
+      state.error = [action.payload];
+    },
+    // Candidato update async reducers
+    [updateCandidato.fulfilled]: (state, action) => {
+      state.loading = false;
+      console.log('Update reducer fulifield:');
+      console.log(action.payload);
+      state.detail = [action.payload.candidato];
+    },
+    [updateCandidato.rejected]: (state, action) => {
+      state.loading = false;
+      state.error = [action.payload];
+    },
+    // Candidato update TAGS async reducers
+    [updateCandidatoTags.fulfilled]: (state, action) => {
+      state.loading = false;
+      console.log('Update TAGS reducer fulifield:');
+      console.log(action.payload);
+      state.detail = [action.payload.candidato];
+    },
+    [updateCandidatoTags.rejected]: (state, action) => {
       state.loading = false;
       state.error = [action.payload];
     },

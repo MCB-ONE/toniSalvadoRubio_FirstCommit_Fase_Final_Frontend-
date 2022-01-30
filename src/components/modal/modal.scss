@@ -12,7 +12,7 @@
     align-items: center;
     justify-content: center;
 }
-.modal-content {
+.cm-modal-content {
     border-radius: 8px;
     position: relative;
     width: 1138px !important;
@@ -33,7 +33,7 @@
         }
     }
     .modal-main{
-        padding: 0 10px;
+        /* padding: 0 10px; */
     }
     .modal-footer { 
         width: 100% ;

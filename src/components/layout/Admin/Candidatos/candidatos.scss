@@ -103,10 +103,13 @@
 .candidato-form {
     flex-basis: 30%;
     background-color: $cm-white;
-    padding: 0 24px;
     box-sizing: border-box;
     border-radius: 20px;
+    .row{
+        margin: 0;
+    }
     form {
+        margin: 0;
         i {
             font-size: 16px;
             -webkit-text-stroke: 0px;
@@ -121,6 +124,10 @@
             margin-bottom: 15px;
         }
 
+        .form-content{
+            padding: 0 24px 0 10px;
+            margin: 0;
+        }
         /* Form */
         .form-label {
             font-weight: 700;
@@ -212,6 +219,7 @@
     }
     .file-btn {
         position: relative;
+        cursor: pointer;
         input {
             position: absolute;
             top: 15%;
@@ -222,6 +230,7 @@
         }
         .button {
             margin-right: 10px;
+            padding: 9px 14px;
         }
     }
 
@@ -251,5 +260,11 @@
         .tag-select__clear-indicator{
             display: none;
         }
+    }
+    
+    .form-error {
+        margin-bottom: 1rem;
+        margin-top: -1rem;
+        color: $cm-red;
     }
 }

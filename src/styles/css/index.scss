@@ -75,6 +75,10 @@ a {
     font-weight: 200 !important;
 }
 
+.capitalize {
+    text-transform: capitalize;
+}
+
 /* Logo */
 #logo {
     h1 {
@@ -214,6 +218,7 @@ form {
 .tag-list {
     span {
         display: inline-block;
+        cursor: pointer;
         background-color: $cm-gray--200;
         color: $cm-black;
         text-transform: uppercase;

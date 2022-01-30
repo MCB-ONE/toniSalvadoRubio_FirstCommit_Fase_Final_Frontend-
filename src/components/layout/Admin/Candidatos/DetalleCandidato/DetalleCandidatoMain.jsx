@@ -33,7 +33,10 @@ const detalleCandidatoMain = () => {
       { candidatoDetail ? (
         <>
           <div className="info">
-            <img src="/images/candidate-default-img.jpeg" alt="imagen de perfil" />
+            {
+              candidatoDetail.avatar ? <img src={candidatoDetail.avatar.url} alt="imagen de perfil" />
+                : <img src="/images/candidate-default-img.jpeg" alt="imagen de perfil" />
+            }
             <div className="profile row">
               <div className="profile-location col-auto">
                 <h1>{candidatoDetail.nombreCompleto}</h1>

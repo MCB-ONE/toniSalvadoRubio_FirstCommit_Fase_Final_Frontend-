@@ -1,28 +1,39 @@
-import React, { useState } from 'react';
-import Select from 'react-select';
-import { CgClose } from 'react-icons/cg';
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-underscore-dangle */
+import React, { useEffect, useRef, useState } from 'react';
+import PropTypes from 'prop-types';
+/* import PropTypes from 'prop-types'; */
+import { useDispatch, useSelector } from 'react-redux';
 import '../layout/Admin/Candidatos/candidatos.scss';
 import { BiCloudUpload } from 'react-icons/bi';
-import tags from '../../data/tecnologias.json';
+import { useNavigate } from 'react-router-dom';
+import countriesDataSet from '../../data/paises';
+import { createCandidato } from '../../store/slices/candidatos/index';
+import { getAllTecnologias } from '../../store/slices/tecnologias';
+import Spinner from '../spinner/Spinner';
 import Button from '../button/Button';
+import TagSelector from '../tags/TagSelector';
+/* import TagSelector from '../tags/TagSelector'; */
 
-const CandidatoCreateForm = () => {
-  const [selectedTags, setSelectedTags] = useState(null);
+const CandidatoCreateForm = ({ changeState }) => {
+  const tecnologiasState = useSelector((reduxState) => reduxState.tecnologias);
+  let techOptions = false;
+  if (tecnologiasState.list) {
+    techOptions = tecnologiasState.list;
+  }
 
-  // Tags methods
-  const handleTagsChange = (e) => {
-    setSelectedTags(e);
-  };
+  const [loading, setLoading] = useState(false);
+  const countries = countriesDataSet;
 
-  const deleteTag = (value) => {
-    const newState = selectedTags.filter((tag) => {
-      return tag.id !== value;
-    });
-    setSelectedTags(newState);
-  };
+  const navigate = useNavigate();
+  // const availableCountries = countriesDataSet.filter((item) => item !== 'Seleccione un país');
+  const dispatch = useDispatch();
+  // Dispathc getAllTec
+  useEffect(() => {
+    dispatch(getAllTecnologias());
+  }, [dispatch]);
 
-  // Formik config
-  const initialValues = {
+  const [formValues, setFormValues] = useState({
     nombreCompleto: '',
     pais: '',
     ciudad: '',
@@ -31,29 +42,38 @@ const CandidatoCreateForm = () => {
     remoto: '',
     disponibilidadTraslado: '',
     enlaceLinkedin: '',
-    avatar: '',
-    cv: '',
-    tecnologias: '',
+  });
+
+  // Retrieve selected tech
+  const [selectedTecnologias, setSelectedTecnologias] = useState([]);
+
+  // Handling files
+  const inputAvatarRef = useRef();
+
+  const handlerChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues({ ...formValues, [name]: value });
   };
 
-  /** Yup schema config */
-  const registerSchema = Yup.object().shape(
-    {
-      email: Yup.string()
-        .email('Formato de email inválido.')
-        .required('Campo obligatorio.'),
-      password: Yup.string()
-        .min(6, 'Contraseña muy corta. Mínimo 6 carácteres.')
-        .required('Campo obligatorio.'),
-    },
-  );
+  // Method to format array to object
+  const arrayFormat = (array) => {
+    const obj = array.reduce(
+      (acc, cur) => (
+        { ...acc, [cur.value]: {} }
+      ), {},
+    );
+    return obj;
+  };
 
-  // Submit handle trigger
-  const authUser = (formValue) => {
-    const { email, password } = formValue;
-    setLoading(true);
-
-    dispatch(login({ email, password }))
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const data = {
+      ...formValues, /*
+      avatar: inputAvatarRef.current.files[0],
+      tecnologias: arrayFormat(selectedTecnologias), */
+    };
+    console.log(data);
+    dispatch(createCandidato(data))
       .unwrap()
       .then(() => {
         navigate('/admin');
@@ -65,136 +85,208 @@ const CandidatoCreateForm = () => {
 
   return (
     <div className="candidato-form">
-      <form className="row">
-        <div className="col-6 row">
-          <div className="col-12">
-            <label htmlFor="nombre" className="form-label">Nombre y Apellidos</label>
-            <input type="text" className="form-control" id="nombre" placeholder="Nombre Alumno" name="nombre" />
-          </div>
-          <div className="col-6">
-            <label htmlFor="pais" className="form-label">País</label>
-            <select className="form-select form-select-lg mb-3" aria-label=".form-select-lg pais" name="pais" value="none">
-              <option value="none">Elige un país</option>
-              <option value="0">España</option>
-              <option value="1">Argentina</option>
-              <option value="2">Francia</option>
-              <option value="3">Alemania</option>
-            </select>
-          </div>
-          <div className="col-6">
-            <label htmlFor="ciudad" className="form-label">Ciudad</label>
-            <select className="form-select form-select-lg mb-3" aria-label=".form-select-lg ciudad" name="ciudad" value="none">
-              <option value="none">Elige una ciudad</option>
-              <option value="0">Barcelona</option>
-              <option value="1">Madrid</option>
-              <option value="2">Bilbao</option>
-              <option value="3">Valencia</option>
-            </select>
-          </div>
-          <div className="col-6">
-            <label htmlFor="telefono" className="form-label ">Nº Teléfono</label>
-            <input type="tel" className="form-control num" id="telefono" placeholder="+34 654 85 52 48" name="telefono" />
-          </div>
-          <div className="col-6">
-            <label htmlFor="email" className="form-label">Email</label>
-            <input type="email" className="form-control" id="email" placeholder="hcliment@gmail.com" name="email" />
-          </div>
-          <div className="col-6">
-            <label htmlFor="presencialidad" className="form-label">Presencialidad</label>
-            <select className="form-select form-select-lg mb-3" aria-label=".form-select-lg presencialidad" name="presencialidad" value={0}>
-              <option value={0}>En remoto</option>
-              <option value={1}>Presencial</option>
-            </select>
-          </div>
-          <div className="col-6">
-            <label htmlFor="traslado" className="form-label">Traslado</label>
-            <select className="form-select form-select-lg mb-3" aria-label=".form-select-lg traslado" name="traslado" value={0}>
-              <option value="0">No</option>
-              <option value="1">Si</option>
-            </select>
-          </div>
-          <div className="col-12">
-            <label htmlFor="nombre" className="form-label">Perfil Linkedin</label>
-            <input type="text" className="form-control" id="nombre" placeholder="Enlace a LinkedIn" name="nombre" />
-          </div>
-        </div>
-        <div className="col-6">
-          <div className="mb-4 file-input">
-            <label htmlFor="cv" className="form-label">Foto de perfil</label>
-            <div className="row">
-              <div className="col-auto pe-0 file-btn">
-                <input type="file" name="foto-perfil" id="foto-perfil" />
-                <Button
-                  label="Subir imágen"
-                  color="secondary"
+      {
+      techOptions ? (
+        <form onSubmit={handleSubmit}>
+          <div className="row form-content">
+            <div className="col-6 row">
+              <div className="col-12">
+                <label htmlFor="nombreCompleto" className="form-label">
+                  Nombre y Apellidos
+                </label>
+                <input
+                  type="text"
+                  required
+                  className="form-control"
+                  id="nombreCompleto"
+                  placeholder="Nombre Alumno"
+                  name="nombreCompleto"
+                  value={formValues.nombreCompleto}
+                  onChange={handlerChange}
+                />
+              </div>
+              <div className="col-6">
+                <label htmlFor="pais" className="form-label">País</label>
+                <select
+                  required
+                  name="pais"
+                  as="select"
+                  className="form-select form-select-lg mb-3"
+                  onChange={handlerChange}
                 >
-                  <BiCloudUpload />
-                </Button>
+                  {countries.map((count) => {
+                    return <option key={count} value={count}>{count}</option>;
+                  })}
+                </select>
               </div>
-              <div className="col-auto p-0">
-                <p>
-                  Archivos soportados:
-                  {' '}
-                  <span>.png, .jpg, y .jpeg</span>
-                </p>
-                <p>
-                  Tamaño de archivo máximo:
-                  {' '}
-                  <span>2 MB</span>
-                  {' '}
-                </p>
+              <div className="col-6">
+                <label htmlFor="ciudad" className="form-label">Ciudad</label>
+                <input
+                  required
+                  type="text"
+                  className="form-control"
+                  id="ciudad"
+                  placeholder="Nombre Alumno"
+                  name="ciudad"
+                  onChange={handlerChange}
+                />
               </div>
-            </div>
-          </div>
-          <div className="mb-4 file-input">
-            <label htmlFor="cv" className="form-label">Documento CV</label>
-            <div className="row">
-              <div className="col-auto pe-0 file-btn">
-                <input type="file" name="cv" id="cv" />
-                <Button
-                  label="Subir documento PDF"
-                  color="secondary"
-                >
-                  <BiCloudUpload />
-                </Button>
+              <div className="col-6">
+                <label htmlFor="telefono" className="form-label ">Nº Teléfono</label>
+                <input
+                  required
+                  type="tel"
+                  className="form-control num"
+                  id="telefono"
+                  placeholder="Ej: 654 85 52 48"
+                  name="telefono"
+                  onChange={handlerChange}
+                />
               </div>
-              <div className="col-auto p-0">
-                <p>
-                  Archivos soportados:
-                  {' '}
-                  <span>.png, .jpg, y .jpeg</span>
-                </p>
-                <p>
-                  Tamaño de archivo máximo:
-                  {' '}
-                  <span>2 MB</span>
-                  {' '}
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="col-12 mb-3 tag-selector">
-            <label htmlFor="etiquetas" className="form-label">Etiquetas</label>
-            <Select className="form-control" placeholder="Escribe para buscar...." name="etiquetas" isMulti options={tags} value={selectedTags} onChange={handleTagsChange} classNamePrefix="tag-select" />
-            {
-            selectedTags === null ? ''
-              : (
-                <div id="tag-list" className="tag-list">
-                  {selectedTags.map((t) => (
-                    <span key={t.id}>
-                      {t.label}
-                      <CgClose onClick={() => deleteTag(t.id)} />
-                    </span>
-                  ))}
-                </div>
-              )
+              <div className="col-6">
 
-          }
+                <label htmlFor="email" className="form-label">Email</label>
+                <input
+                  type="email"
+                  required
+                  className="form-control"
+                  id="email"
+                  placeholder="hcliment@gmail.com"
+                  name="email"
+                  onChange={handlerChange}
+                />
+              </div>
+              <div className="col-6">
+                <label htmlFor="remoto" className="form-label">Presencialidad</label>
+                <select
+                  name="remoto"
+                  as="select"
+                  className="form-select form-select-lg mb-3"
+                  onChange={handlerChange}
+                >
+                  <option value="none">Elige una opción</option>
+                  <option value>Remoto</option>
+                  <option value={false}>Presencial</option>
+                </select>
+              </div>
+              <div className="col-6">
+                <label htmlFor="disponibilidadTraslado" className="form-label">Traslado</label>
+                <select
+                  name="disponibilidadTraslado"
+                  as="select"
+                  className="form-select form-select-lg mb-3"
+                  onChange={handlerChange}
+                >
+                  <option value="none">Elige una opción</option>
+                  <option value>Si</option>
+                  <option value={false}>No</option>
+                </select>
+              </div>
+              <div className="col-12">
+                <label htmlFor="enlaceLinkedin" className="form-label">Perfil Linkedin</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Enlace a LinkedIn"
+                  name="enlaceLinkedin"
+                  onChange={handlerChange}
+                />
+              </div>
+            </div>
+            <div className="col-6">
+              <div className="mb-4 file-input">
+                <label htmlFor="avatar" className="form-label">Foto de perfil</label>
+                <div className="row">
+                  <div className="col-auto pe-0 file-btn">
+                    <input
+                      type="file"
+                      ref={inputAvatarRef}
+                      name="avatar"
+                      id="avatar"
+                    />
+                    <Button
+                      label="Subir imágen"
+                      color="secondary"
+                    >
+                      <BiCloudUpload />
+                    </Button>
+                  </div>
+                  <div className="col-auto p-0">
+                    <p>
+                      Archivos soportados:
+                      {' '}
+                      <span>.png, .jpg, y .jpeg</span>
+                    </p>
+                    <p>
+                      Tamaño de archivo máximo:
+                      {' '}
+                      <span>2 MB</span>
+                      {' '}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="mb-4 file-input">
+                <label htmlFor="avatar" className="form-label">Documento CV</label>
+                <div className="row">
+                  <div className="col-auto pe-0 file-btn">
+                    <input
+                      type="file"
+                      ref={inputAvatarRef}
+                      name="cv"
+                      id="cv"
+                    />
+                    <Button
+                      label="Subir imágen"
+                      color="secondary"
+                    >
+                      <BiCloudUpload />
+                    </Button>
+                  </div>
+                  <div className="col-auto p-0">
+                    <p>
+                      Archivos soportados:
+                      {' '}
+                      <span>.df</span>
+                    </p>
+                    <p>
+                      Tamaño de archivo máximo:
+                      {' '}
+                      <span>20 MB</span>
+                      {' '}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="mb-3 tag-selector">
+                <TagSelector
+                  options={techOptions}
+                  field="Etiquetas"
+                  setSelectedTecnologias={setSelectedTecnologias}
+                />
+              </div>
+            </div>
           </div>
+          {
+            loading && <h2>Creacion en progreso..</h2>
+          }
+          <div className="modal-footer">
+            <Button label="Guardar" color="light" type="submit" />
+            <Button label="Cancelar" color="secondary" onClick={() => changeState(false)} />
+          </div>
+        </form>
+      ) : (
+        <div className="spinner-container">
+          <Spinner />
         </div>
-      </form>
+      )
+    }
     </div>
   );
+};
+
+CandidatoCreateForm.propTypes = {
+  changeState: PropTypes.func.isRequired,
 };
 
 export default CandidatoCreateForm;
