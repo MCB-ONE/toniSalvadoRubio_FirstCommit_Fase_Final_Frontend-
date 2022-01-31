@@ -167,7 +167,9 @@ form {
 }
 
 /* Botones */
-/* Botones */
+.pointer{
+    cursor: pointer;
+}
 .btn {
     border-radius: $cm-border--radius;
     padding: 7px 14px 10px 10px;

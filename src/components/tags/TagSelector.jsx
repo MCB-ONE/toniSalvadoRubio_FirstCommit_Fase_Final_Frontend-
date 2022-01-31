@@ -29,36 +29,23 @@ const TagSelector = ({
     return obj;
   };
 
-  /* useEffect(() => {
-    return () => {
-      console.log('Tagsselector destroy');
-      const data = {
-        id: candidatoId,
-        tecnologias: arrayFormat(selectedTags),
-      };
-      console.log('DATA');
-      console.log(data);
-
-      dispatch(updateCandidatoTags(data));
-    };
-  }, [defaultSelectedTags]); */
-
   // Generate options to Select component
   const selectOptions = options.map((option) => {
     return { value: option.id, label: option.nombre };
   });
   // Add tag list handler
   const handleTagsChange = (e) => {
-    console.log(e);
     setSelectedTags(e);
-    console.log('Handler');
     // Sending selected tags to parent component
-    if (setSelectedTecnologias)setSelectedTecnologias(e);
-    const data = {
-      id: candidatoId,
-      tecnologias: arrayFormat(e),
-    };
-    dispatch(updateCandidatoTags(data));
+    if (setSelectedTecnologias) {
+      setSelectedTecnologias(arrayFormat(e));
+    } else {
+      const data = {
+        id: candidatoId,
+        tecnologias: arrayFormat(e),
+      };
+      dispatch(updateCandidatoTags(data));
+    }
   };
 
   // Delete tag method
@@ -67,17 +54,15 @@ const TagSelector = ({
       return tag.value !== value;
     });
     setSelectedTags(newState);
-    console.log(newState);
     const data = {
       id: candidatoId,
       tecnologias: arrayFormat(newState),
     };
-
-    console.log(data);
-    dispatch(updateCandidatoTags(data));
-
-    // Sending selected tags to parent component
-    if (setSelectedTecnologias)setSelectedTecnologias(newState);
+    if (setSelectedTecnologias) {
+      setSelectedTecnologias(arrayFormat(newState));
+    } else {
+      dispatch(updateCandidatoTags(data));
+    }
   };
   return (
     <div className="col-12 mb-3 tag-selector">
@@ -111,13 +96,14 @@ TagSelector.propTypes = {
   defaultSelectedTags: PropTypes.array,
   field: PropTypes.string,
   setSelectedTecnologias: PropTypes.func,
-  candidatoId: PropTypes.number.isRequired,
+  candidatoId: PropTypes.number,
 };
 
 TagSelector.defaultProps = {
-  defaultSelectedTags: false,
+  defaultSelectedTags: null,
   field: 'Unset',
   setSelectedTecnologias: null,
+  candidatoId: null,
 };
 
 export default TagSelector;

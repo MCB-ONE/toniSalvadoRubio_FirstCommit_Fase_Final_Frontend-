@@ -74,12 +74,13 @@
 
     .form-check {
         padding-left: 30px;
+        border-radius: 0 !important;
         .form-check-label {
             font-weight: 500;
             font-size: 15px;
             line-height: 18px;
         }
-        .form-check-input[type="checkbox"] {
+        .form-check-input[type="radio"] {
             margin-top: 1px;
             margin-right: 13px;
             border-radius: 0.15rem;

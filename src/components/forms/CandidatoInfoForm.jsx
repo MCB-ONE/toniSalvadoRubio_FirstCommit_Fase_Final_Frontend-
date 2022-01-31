@@ -28,14 +28,16 @@ const CandidatoInfoForm = () => {
   // Handler onchange and trigger update field request
   const handlerChange = (e) => {
     const { name, value } = e.target;
-    const field = {
-      [name]: value,
-    };
-    const data = {
-      id: candidatoData.id,
-      field,
-    };
-    dispatch(updateCandidato(data));
+    if (value !== 'null') {
+      const field = {
+        [name]: value,
+      };
+      const data = {
+        id: candidatoData.id,
+        field,
+      };
+      dispatch(updateCandidato(data));
+    }
   };
 
   // File upload handler
@@ -127,7 +129,7 @@ const CandidatoInfoForm = () => {
                 defaultValue={candidatoData.remoto}
                 onBlur={handlerChange}
               >
-                <option value="none">Elige una opción</option>
+                <option value="null">Elige una opción</option>
                 <option value>Remoto</option>
                 <option value={false}>Presencial</option>
               </select>
@@ -141,7 +143,7 @@ const CandidatoInfoForm = () => {
                 defaultValue={candidatoData.disponibilidadTraslado}
                 onBlur={handlerChange}
               >
-                <option value="none">Elige una opción</option>
+                <option value="null">Elige una opción</option>
                 <option value>Si</option>
                 <option value={false}>No</option>
               </select>
@@ -184,7 +186,7 @@ const CandidatoInfoForm = () => {
                     onChange={handlerFileChange}
                   />
                   <Button
-                    label="Subir imágen"
+                    label="Subir de nuevo"
                     color="secondary"
                   >
                     <BiCloudUpload />

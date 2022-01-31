@@ -25,7 +25,6 @@ const CandidatoDetalleHabilidades = () => {
       {
         tecnologias && (
           <>
-            {console.log(candidatoDetail.tecnologias)}
             <TagSelector
               options={tecnologias}
               defaultSelectedTags={candidatoDetail.tecnologias}

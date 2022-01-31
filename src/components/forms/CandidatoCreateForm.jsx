@@ -22,6 +22,7 @@ const CandidatoCreateForm = ({ changeState }) => {
     techOptions = tecnologiasState.list;
   }
 
+  const [selectedTecnologias, setSelectedTecnologias] = useState({});
   const [loading, setLoading] = useState(false);
   const countries = countriesDataSet;
 
@@ -44,9 +45,6 @@ const CandidatoCreateForm = ({ changeState }) => {
     enlaceLinkedin: '',
   });
 
-  // Retrieve selected tech
-  const [selectedTecnologias, setSelectedTecnologias] = useState([]);
-
   // Handling files
   const inputAvatarRef = useRef();
 
@@ -55,22 +53,13 @@ const CandidatoCreateForm = ({ changeState }) => {
     setFormValues({ ...formValues, [name]: value });
   };
 
-  // Method to format array to object
-  const arrayFormat = (array) => {
-    const obj = array.reduce(
-      (acc, cur) => (
-        { ...acc, [cur.value]: {} }
-      ), {},
-    );
-    return obj;
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log(selectedTecnologias);
     const data = {
-      ...formValues, /*
-      avatar: inputAvatarRef.current.files[0],
-      tecnologias: arrayFormat(selectedTecnologias), */
+      ...formValues,
+      /* avatar: inputAvatarRef.current.files[0], */
+      tecnologias: selectedTecnologias,
     };
     console.log(data);
     dispatch(createCandidato(data))
@@ -126,7 +115,7 @@ const CandidatoCreateForm = ({ changeState }) => {
                   type="text"
                   className="form-control"
                   id="ciudad"
-                  placeholder="Nombre Alumno"
+                  placeholder="Ciudad"
                   name="ciudad"
                   onChange={handlerChange}
                 />

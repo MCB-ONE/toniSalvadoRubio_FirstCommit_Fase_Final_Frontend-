@@ -6,9 +6,9 @@ import CandidatosService from '../../../services/candidatos/candidato.service';
 // CRUD thunk middlewares
 export const getAllCandidatos = createAsyncThunk(
   'candidatos/fetchAll',
-  async (thunkAPI) => {
+  async (query = '', thunkAPI) => {
     try {
-      const data = await CandidatosService.getAllCandidatos();
+      const data = await CandidatosService.getAllCandidatos(query);
       return { candidatos: data.data.data.data };
     } catch (error) {
       const message = (error.response
@@ -44,8 +44,6 @@ export const createCandidato = createAsyncThunk(
   'candidatos/create',
   async (candidato, thunkAPI) => {
     try {
-      console.log('Create Thunk try block');
-      console.log(candidato);
       const data = await CandidatosService.createCandidato(candidato);
       return { candidato: data.data };
     } catch (error) {
@@ -65,8 +63,6 @@ export const updateCandidato = createAsyncThunk(
   // eslint-disable-next-line no-unused-vars
   async (updateData, thunkAPI) => {
     try {
-      console.log('Update Thunk try block');
-      console.log(updateData);
       await CandidatosService.updateCandidato(updateData);
       const data = await CandidatosService.getCandidatosById(updateData.id);
       return { candidato: data.data.data };
@@ -87,8 +83,6 @@ export const updateCandidatoTags = createAsyncThunk(
   // eslint-disable-next-line no-unused-vars
   async (updateData, thunkAPI) => {
     try {
-      console.log('Update TAGS Thunk try block');
-      console.log(updateData);
       await CandidatosService.updateCandidatoTag(updateData);
       const data = await CandidatosService.getCandidatosById(updateData.id);
       return { candidato: data.data.data };
@@ -153,8 +147,6 @@ const candidatoSlice = createSlice({
     // Candidato create async reducers
     [createCandidato.fulfilled]: (state, action) => {
       state.loading = false;
-      console.log('Create reducer fulifield:');
-      console.log(action.payload.candidato);
       state.detail = [action.payload];
     },
     [createCandidato.rejected]: (state, action) => {
@@ -164,8 +156,6 @@ const candidatoSlice = createSlice({
     // Candidato update async reducers
     [updateCandidato.fulfilled]: (state, action) => {
       state.loading = false;
-      console.log('Update reducer fulifield:');
-      console.log(action.payload);
       state.detail = [action.payload.candidato];
     },
     [updateCandidato.rejected]: (state, action) => {
@@ -175,8 +165,6 @@ const candidatoSlice = createSlice({
     // Candidato update TAGS async reducers
     [updateCandidatoTags.fulfilled]: (state, action) => {
       state.loading = false;
-      console.log('Update TAGS reducer fulifield:');
-      console.log(action.payload);
       state.detail = [action.payload.candidato];
     },
     [updateCandidatoTags.rejected]: (state, action) => {
