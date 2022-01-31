@@ -1,29 +1,23 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { IoTrashOutline } from 'react-icons/io5';
-import { CgClose } from 'react-icons/cg';
-import Select from 'react-select';
 import { useDispatch, useSelector } from 'react-redux';
-import tecnologias from '../../../../data/tecnologias.json';
 import estados from '../../../../data/estados';
 import countriesDataSet from '../../../../data/paises';
 import Spinner from '../../../spinner/Spinner';
 import { getAllCandidatos } from '../../../../store/slices/candidatos';
+import TagSelector from '../../../tags/TagSelector';
+import { getAllTecnologias } from '../../../../store/slices/tecnologias';
 
 const AdminSidebar = () => {
-  const techOptions = useSelector((reduxState) => reduxState.tecnologias);
-  const [selectedTags, setSelectedTags] = useState(null);
+  const tecnologiasState = useSelector((reduxState) => reduxState.tecnologias);
+  let techOptions = false;
+  if (tecnologiasState.list) {
+    techOptions = tecnologiasState.list;
+  }
+  const [selectedTecnologias, setSelectedTecnologias] = useState({});
   const [filters, setFilters] = useState({});
-  const [queryString, setQueryString] = useState({});
+  const [queryString, setQueryString] = useState('');
   const dispatch = useDispatch();
-  const handleTagsChange = (e) => {
-    setSelectedTags(e);
-  };
-  const deleteTag = (value) => {
-    const newState = selectedTags.filter((tag) => {
-      return tag.id !== value;
-    });
-    setSelectedTags(newState);
-  };
   /*   const tech = {
     tecnologias: {
       1: {
@@ -34,9 +28,13 @@ const AdminSidebar = () => {
       },
     },
   }; */
+  useEffect(() => {
+    dispatch(getAllTecnologias());
+    console.log(queryString);
+    console.log(selectedTecnologias);
+  }, [dispatch]);
 
   const filterHandler = (e) => {
-    e.preventDefault();
     const { name, value } = e.target;
     setFilters({
       ...filters,
@@ -44,11 +42,10 @@ const AdminSidebar = () => {
     });
     setQueryString(new URLSearchParams(filters).toString());
   };
+  dispatch(getAllCandidatos(queryString));
   const clearFilters = () => {
     dispatch(getAllCandidatos());
   };
-
-  if (queryString)dispatch(getAllCandidatos(queryString));
 
   return (
     <div className="candidatos-filters">
@@ -62,21 +59,11 @@ const AdminSidebar = () => {
             </div>
             <form>
               <div className="col-12 mb-3 tag-selector">
-                <label htmlFor="tecnologias" className="form-label">Tecnologías</label>
-                <Select className="form-control" placeholder="Escribe para buscar...." name="etiquetas" isMulti options={tecnologias} value={selectedTags} onChange={handleTagsChange} classNamePrefix="tag-select" />
-                {
-            selectedTags === null ? ''
-              : (
-                <div id="tag-list" className="tag-list">
-                  {selectedTags.map((t) => (
-                    <span key={t.id}>
-                      {t.label}
-                      <CgClose onClick={() => deleteTag(t.id)} />
-                    </span>
-                  ))}
-                </div>
-              )
-        }
+                <TagSelector
+                  options={techOptions}
+                  field="Etiquetas"
+                  setSelectedTecnologias={setSelectedTecnologias}
+                />
               </div>
               <div className="mb-3">
                 <label htmlFor="pais" className="form-label">País</label>
@@ -120,16 +107,16 @@ const AdminSidebar = () => {
                 </div>
               </div>
               <div className="mb-3">
-                <label className="form-label" htmlFor="disponibilidadTraslado">Posibilidad traslado</label>
+                <label className="form-label" htmlFor="traslado">Posibilidad traslado</label>
                 <div className="form-check">
                   <input
                     className="form-check-input"
                     type="radio"
                     value
-                    name="disponibilidadTraslado"
+                    name="traslado"
                     onClick={filterHandler}
                   />
-                  <label className="form-check-label " htmlFor="disponibilidadTraslado">
+                  <label className="form-check-label " htmlFor="traslado">
                     Si
                   </label>
                 </div>
@@ -138,10 +125,10 @@ const AdminSidebar = () => {
                     className="form-check-input"
                     type="radio"
                     value={false}
-                    name="disponibilidadTraslado"
+                    name="traslado"
                     onClick={filterHandler}
                   />
-                  <label className="form-check-label" htmlFor="disponibilidadTraslado">
+                  <label className="form-check-label" htmlFor="traslado">
                     No
                   </label>
                 </div>
