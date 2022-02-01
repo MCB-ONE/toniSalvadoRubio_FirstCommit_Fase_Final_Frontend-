@@ -26,12 +26,12 @@ export const login = createAsyncThunk(
 );
 
 // Logout thunk middleware
-export const logout = createAsyncThunk(
+/* export const logout = createAsyncThunk(
   'auth/logout', async () => {
     await AuthService.logout();
   },
 );
-
+ */
 const initialState = user
   ? { isLoggedIn: true, user }
   : { isLoggedIn: false, user: null };
@@ -39,6 +39,13 @@ const initialState = user
 const authSlice = createSlice({
   name: 'auth',
   initialState,
+  reducers: {
+    logout: (state) => {
+      localStorage.removeItem('user');
+      state.isLoggedIn = false;
+      state.user = null;
+    },
+  },
   extraReducers: {
     [login.fulfilled]: (state, action) => {
       state.isLoggedIn = true;
@@ -48,12 +55,8 @@ const authSlice = createSlice({
       state.isLoggedIn = false;
       state.user = null;
     },
-    [logout.fulfilled]: (state, action) => {
-      state.isLoggedIn = false;
-      state.user = null;
-    },
   },
 });
-
+export const { logout } = authSlice.actions;
 const { reducer } = authSlice;
 export default reducer;

@@ -1,16 +1,14 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable no-plusplus */
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { CgClose } from 'react-icons/cg';
 import Select from 'react-select';
-import { useDispatch, useSelector } from 'react-redux';
-import { updateCandidato, updateCandidatoTags } from '../../store/slices/candidatos';
+import { useDispatch } from 'react-redux';
+import { updateCandidatoTags } from '../../store/slices/candidatos';
 
 const TagSelector = ({
-  options, defaultSelectedTags, field, setSelectedTecnologias, candidatoId,
+  options, defaultSelectedTags, field, filterHandler, candidatoId,
 }) => {
-  const [candidatoData, setCandidatoData] = useState(false);
   if (defaultSelectedTags) {
     defaultSelectedTags = defaultSelectedTags.map((option) => {
       return { value: option.id, label: option.nombre };
@@ -37,8 +35,8 @@ const TagSelector = ({
   const handleTagsChange = (e) => {
     setSelectedTags(e);
     // Sending selected tags to parent component
-    if (setSelectedTecnologias) {
-      setSelectedTecnologias(arrayFormat(e));
+    if (filterHandler) {
+      filterHandler(e);
     } else {
       const data = {
         id: candidatoId,
@@ -58,8 +56,8 @@ const TagSelector = ({
       id: candidatoId,
       tecnologias: arrayFormat(newState),
     };
-    if (setSelectedTecnologias) {
-      setSelectedTecnologias(arrayFormat(newState));
+    if (filterHandler) {
+      filterHandler(newState);
     } else {
       dispatch(updateCandidatoTags(data));
     }
@@ -71,17 +69,17 @@ const TagSelector = ({
           <label htmlFor={field} className="form-label capitalize">{field}</label>
           <Select className="form-control" placeholder="Escribe para buscar...." name={field} isMulti options={selectOptions} value={selectedTags} onChange={handleTagsChange} classNamePrefix="tag-select" />
           {
-              selectedTags === null ? ''
-                : (
-                  <div id="tag-list" className="tag-list">
-                    {selectedTags.map((t) => (
-                      <span key={t.value}>
-                        {t.label}
-                        <CgClose onClick={() => deleteTag(t.value)} />
-                      </span>
-                    ))}
-                  </div>
-                )
+            selectedTags === null ? ''
+              : (
+                <div id="tag-list" className="tag-list">
+                  {selectedTags.map((t) => (
+                    <span key={t.value}>
+                      {t.label}
+                      <CgClose onClick={() => deleteTag(t.value)} />
+                    </span>
+                  ))}
+                </div>
+              )
           }
         </>
       ) : (
@@ -95,14 +93,14 @@ TagSelector.propTypes = {
   options: PropTypes.array.isRequired,
   defaultSelectedTags: PropTypes.array,
   field: PropTypes.string,
-  setSelectedTecnologias: PropTypes.func,
+  filterHandler: PropTypes.func,
   candidatoId: PropTypes.number,
 };
 
 TagSelector.defaultProps = {
   defaultSelectedTags: null,
   field: 'Unset',
-  setSelectedTecnologias: null,
+  filterHandler: null,
   candidatoId: null,
 };
 

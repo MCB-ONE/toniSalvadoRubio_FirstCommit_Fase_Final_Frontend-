@@ -1,21 +1,30 @@
 // Imports de React
 import React from 'react';
 import ReactDOM from 'react-dom';
+// Query client imports
+import { QueryClient, QueryClientProvider } from 'react-query';
+// Redux imports
+import { Provider } from 'react-redux';
 
-// Imports de Redux
-// import { Provider } from 'react-redux';
-
+// Store and main component import
+import store from './store/index';
 import App from './components/App';
 
-// Importamos las hojas de estilos
+// Style sheets imports
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/css/index.scss';
 
-// TODO: Si trabajamos con Redux, crear el Store y aplicar el middleware de Redux Saga
+// Query-Client configuration
+// Create a client
+const queryClient = new QueryClient();
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+      <QueryClientProvider client={queryClient}>
+        <App />
+      </QueryClientProvider>
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root'),
 );

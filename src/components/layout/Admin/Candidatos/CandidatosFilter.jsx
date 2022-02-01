@@ -14,36 +14,64 @@ const AdminSidebar = () => {
   if (tecnologiasState.list) {
     techOptions = tecnologiasState.list;
   }
-  const [selectedTecnologias, setSelectedTecnologias] = useState({});
+  // const [selectedTecnologias, setSelectedTecnologias] = useState(false);
   const [filters, setFilters] = useState({});
-  const [queryString, setQueryString] = useState('');
   const dispatch = useDispatch();
-  /*   const tech = {
-    tecnologias: {
-      1: {
-        Nivel: 1,
-      },
-      2: {
-        Nivel: 3,
-      },
-    },
-  }; */
+
   useEffect(() => {
     dispatch(getAllTecnologias());
-    console.log(queryString);
-    console.log(selectedTecnologias);
   }, [dispatch]);
 
-  const filterHandler = (e) => {
-    const { name, value } = e.target;
-    setFilters({
-      ...filters,
-      [name]: value,
-    });
-    setQueryString(new URLSearchParams(filters).toString());
+  // Method to format taglist to form data
+  const arrayFormat = (array) => {
+    const obj = array.reduce(
+      (acc, cur) => (
+        { ...acc, [cur.value]: {} }
+      ), {},
+    );
+    return obj;
   };
-  dispatch(getAllCandidatos(queryString));
+
+  const filterHandler = (e) => {
+    if (Array.isArray(e)) {
+      const tech = arrayFormat(e);
+      const techKeys = Object.keys(tech);
+      let tecString = '';
+      // Format to string
+      techKeys.forEach((tec) => {
+        tecString += `${tec}: 1,`;
+      });
+
+      // tech filter to format to query string array
+      let tecQs = `${tecString}`;
+      tecQs = tecQs.substring(0, tecQs.length - 1);
+      tecQs = `[${tecQs}]`;
+      if (tecQs === '[]') {
+        tecQs = '';
+        const { tecnologias, ...newFilters } = filters;
+        setFilters(
+          newFilters,
+        );
+      }
+      if (tecQs !== '') {
+        setFilters({
+          ...filters,
+          tecnologias: tecQs,
+        });
+      }
+    } else if (e.target.name) {
+      const { name, value } = e.target;
+      setFilters({
+        ...filters,
+        [name]: value,
+      });
+    }
+  };
+
+  dispatch(getAllCandidatos(new URLSearchParams(filters).toString()));
+
   const clearFilters = () => {
+    setFilters({});
     dispatch(getAllCandidatos());
   };
 
@@ -62,7 +90,7 @@ const AdminSidebar = () => {
                 <TagSelector
                   options={techOptions}
                   field="Etiquetas"
-                  setSelectedTecnologias={setSelectedTecnologias}
+                  filterHandler={filterHandler}
                 />
               </div>
               <div className="mb-3">
@@ -94,13 +122,27 @@ const AdminSidebar = () => {
               <div className="mb-3">
                 <label className="form-label" htmlFor="remoto">Presencial/ a distancia</label>
                 <div className="form-check">
-                  <input className="form-check-input" type="radio" value={false} name="remoto" onClick={filterHandler} />
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    checked={filters.remoto === false}
+                    value={false}
+                    name="remoto"
+                    onClick={filterHandler}
+                  />
                   <label className="form-check-label" htmlFor="remoto">
                     Presencial
                   </label>
                 </div>
                 <div className="form-check">
-                  <input className="form-check-input" type="radio" value name="remoto" onClick={filterHandler} />
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    checked={filters.remoto === true}
+                    value
+                    name="remoto"
+                    onClick={filterHandler}
+                  />
                   <label className="form-check-label" htmlFor="remoto">
                     En remoto
                   </label>
@@ -112,6 +154,7 @@ const AdminSidebar = () => {
                   <input
                     className="form-check-input"
                     type="radio"
+                    checked={filters.traslado === true}
                     value
                     name="traslado"
                     onClick={filterHandler}
@@ -124,6 +167,7 @@ const AdminSidebar = () => {
                   <input
                     className="form-check-input"
                     type="radio"
+                    checked={filters.traslado === false}
                     value={false}
                     name="traslado"
                     onClick={filterHandler}
@@ -141,6 +185,7 @@ const AdminSidebar = () => {
                       <input
                         className="form-check-input"
                         type="radio"
+                        checked={filters.estado === es}
                         value={es}
                         name="estado"
                         onClick={filterHandler}
