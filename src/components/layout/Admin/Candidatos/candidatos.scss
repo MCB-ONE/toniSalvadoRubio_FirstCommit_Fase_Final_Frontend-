@@ -235,6 +235,13 @@
         }
     }
 
+    .disabled {
+        .button{
+            color: $cm-red;
+            text-decoration: line-through;
+        }
+    }
+
     .tag-selector{
         .form-control{
             padding: 0;
@@ -261,6 +268,11 @@
         .tag-select__clear-indicator{
             display: none;
         }
+    }
+    .form-select:disabled {
+        background-color: $cm-gray--300;
+        color: $cm-red;
+        text-decoration: line-through;
     }
     
     .form-error {

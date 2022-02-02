@@ -187,7 +187,7 @@ const CandidatosFilter = () => {
                 <label className="form-label" htmlFor="estado">Estado</label>
                 {estados.map((es) => {
                   return (
-                    <div className="form-check" key={es}>
+                    <div className="form-check capitalize" key={es}>
                       <input
                         className="form-check-input"
                         type="radio"

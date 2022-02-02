@@ -54,7 +54,7 @@ const CandidatoCreateForm = ({ changeState }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formValues.pais === 'Selecciona un país') {
+    if (formValues.pais === 'Seleccione un país') {
       setError(true);
       return;
     }
@@ -113,7 +113,7 @@ const CandidatoCreateForm = ({ changeState }) => {
                 {
                   error && (
                     <div className="form-error">
-                      <p>{errorMsg.pais}</p>
+                      <p>{errorMsg}</p>
                     </div>
                   )
                 }
@@ -162,6 +162,7 @@ const CandidatoCreateForm = ({ changeState }) => {
                   as="select"
                   className="form-select form-select-lg mb-3"
                   onChange={handlerChange}
+                  disabled
                 >
                   <option value="none">Elige una opción</option>
                   <option value>Remoto</option>
@@ -173,6 +174,7 @@ const CandidatoCreateForm = ({ changeState }) => {
                 <select
                   name="disponibilidadTraslado"
                   as="select"
+                  disabled
                   className="form-select form-select-lg mb-3"
                   onChange={handlerChange}
                 >
@@ -196,7 +198,7 @@ const CandidatoCreateForm = ({ changeState }) => {
               <div className="mb-4 file-input">
                 <label htmlFor="avatar" className="form-label">Foto de perfil</label>
                 <div className="row">
-                  <div className="col-auto pe-0 file-btn">
+                  <div className="col-auto pe-0 file-btn disabled">
                     <input
                       type="file"
                       ref={inputAvatarRef}
@@ -228,7 +230,7 @@ const CandidatoCreateForm = ({ changeState }) => {
               <div className="mb-4 file-input">
                 <label htmlFor="avatar" className="form-label">Documento CV</label>
                 <div className="row">
-                  <div className="col-auto pe-0 file-btn">
+                  <div className="col-auto pe-0 file-btn disabled">
                     <input
                       type="file"
                       ref={inputAvatarRef}
@@ -236,7 +238,7 @@ const CandidatoCreateForm = ({ changeState }) => {
                       id="cv"
                     />
                     <Button
-                      label="Subir imágen"
+                      label="Subir currículum"
                       color="secondary"
                     >
                       <BiCloudUpload />
