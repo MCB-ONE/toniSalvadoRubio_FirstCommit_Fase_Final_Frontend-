@@ -1,12 +1,12 @@
 import React from 'react';
+import ClientesFilter from './ClientesFilter';
 import ClientesMain from './ClientesMain';
-import ClientesSidebar from './ClientesSidebar';
 
 const ClientesLayout = () => {
   return (
     <>
       <ClientesMain />
-      <ClientesSidebar />
+      <ClientesFilter />
     </>
   );
 };

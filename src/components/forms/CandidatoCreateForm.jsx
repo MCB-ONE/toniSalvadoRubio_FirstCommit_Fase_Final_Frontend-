@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-underscore-dangle */
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 /* import PropTypes from 'prop-types'; */
@@ -21,10 +19,11 @@ const CandidatoCreateForm = ({ changeState }) => {
   if (tecnologiasState.list) {
     techOptions = tecnologiasState.list;
   }
-
   const [selectedTecnologias, setSelectedTecnologias] = useState({});
   const [loading, setLoading] = useState(false);
   const countries = countriesDataSet;
+  const errorMsg = 'Elige una opción.';
+  const [error, setError] = useState(false);
 
   const navigate = useNavigate();
   // const availableCountries = countriesDataSet.filter((item) => item !== 'Seleccione un país');
@@ -55,6 +54,10 @@ const CandidatoCreateForm = ({ changeState }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (formValues.pais === 'Selecciona un país') {
+      setError(true);
+      return;
+    }
     console.log(selectedTecnologias);
     const data = {
       ...formValues,
@@ -107,6 +110,13 @@ const CandidatoCreateForm = ({ changeState }) => {
                     return <option key={count} value={count}>{count}</option>;
                   })}
                 </select>
+                {
+                  error && (
+                    <div className="form-error">
+                      <p>{errorMsg.pais}</p>
+                    </div>
+                  )
+                }
               </div>
               <div className="col-6">
                 <label htmlFor="ciudad" className="form-label">Ciudad</label>
@@ -236,7 +246,7 @@ const CandidatoCreateForm = ({ changeState }) => {
                     <p>
                       Archivos soportados:
                       {' '}
-                      <span>.df</span>
+                      <span>.pdf</span>
                     </p>
                     <p>
                       Tamaño de archivo máximo:

@@ -1,5 +1,4 @@
-/* eslint-disable no-unused-vars */
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllCandidatos, resetDetail } from '../../../../store/slices/candidatos';
 import SortableDataTable from '../../../sortableDataTable/SortableDataTable';

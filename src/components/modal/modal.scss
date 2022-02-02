@@ -30,10 +30,8 @@
         .modal-close{
             color: $cm-gray--300;
             font-size: 20px;
+            cursor: pointer;
         }
-    }
-    .modal-main{
-        /* padding: 0 10px; */
     }
     .modal-footer { 
         width: 100% ;

@@ -8,7 +8,7 @@ import { getAllCandidatos } from '../../../../store/slices/candidatos';
 import TagSelector from '../../../tags/TagSelector';
 import { getAllTecnologias } from '../../../../store/slices/tecnologias';
 
-const AdminSidebar = () => {
+const CandidatosFilter = () => {
   const tecnologiasState = useSelector((reduxState) => reduxState.tecnologias);
   let techOptions = false;
   if (tecnologiasState.list) {
@@ -59,7 +59,7 @@ const AdminSidebar = () => {
           tecnologias: tecQs,
         });
       }
-    } else if (e.target.name) {
+    } else if (e.target.name && e.target.value !== 'Seleccione un país') {
       const { name, value } = e.target;
       setFilters({
         ...filters,
@@ -68,7 +68,9 @@ const AdminSidebar = () => {
     }
   };
 
-  dispatch(getAllCandidatos(new URLSearchParams(filters).toString()));
+  useEffect(() => {
+    dispatch(getAllCandidatos(new URLSearchParams(filters).toString()));
+  }, [filters]);
 
   const clearFilters = () => {
     setFilters({});
@@ -125,7 +127,7 @@ const AdminSidebar = () => {
                   <input
                     className="form-check-input"
                     type="radio"
-                    checked={filters.remoto === false}
+                    defaultChecked={filters.remoto === false}
                     value={false}
                     name="remoto"
                     onClick={filterHandler}
@@ -138,7 +140,7 @@ const AdminSidebar = () => {
                   <input
                     className="form-check-input"
                     type="radio"
-                    checked={filters.remoto === true}
+                    defaultChecked={filters.remoto === true}
                     value
                     name="remoto"
                     onClick={filterHandler}
@@ -154,7 +156,7 @@ const AdminSidebar = () => {
                   <input
                     className="form-check-input"
                     type="radio"
-                    checked={filters.traslado === true}
+                    defaultChecked={filters.traslado === true}
                     value
                     name="traslado"
                     onClick={filterHandler}
@@ -167,7 +169,7 @@ const AdminSidebar = () => {
                   <input
                     className="form-check-input"
                     type="radio"
-                    checked={filters.traslado === false}
+                    defaultChecked={filters.traslado === false}
                     value={false}
                     name="traslado"
                     onClick={filterHandler}
@@ -185,7 +187,7 @@ const AdminSidebar = () => {
                       <input
                         className="form-check-input"
                         type="radio"
-                        checked={filters.estado === es}
+                        defaultChecked={filters.estado === es}
                         value={es}
                         name="estado"
                         onClick={filterHandler}
@@ -210,4 +212,4 @@ const AdminSidebar = () => {
   );
 };
 
-export default AdminSidebar;
+export default CandidatosFilter;
