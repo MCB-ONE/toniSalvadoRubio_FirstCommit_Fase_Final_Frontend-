@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllCandidatos, resetDetail } from '../../../../store/slices/candidatos';
+import Pagination from '../../../pagination/Pagination';
 import SortableDataTable from '../../../sortableDataTable/SortableDataTable';
 import TableNavbar from '../TableNavbar';
 
@@ -8,6 +9,7 @@ const CandidatosMain = () => {
   const dispatch = useDispatch();
   const candidatosList = useSelector((state) => state.candidatos);
   const [candidatosData, setCandidatosData] = useState(candidatosList);
+  const pages = useSelector((state) => state.candidatos.pagination);
   const [query, setQuery] = useState('');
   // Setting a searchable column list
   const searchableColumns = ['nombreCompleto', 'estado', 'ciudad'];
@@ -20,6 +22,14 @@ const CandidatosMain = () => {
         .toLowerCase()
         .indexOf(query.toLowerCase()) > -1,
     ));
+  };
+
+  // Pagination handler
+  const changePage = (page) => {
+    const queryConfig = {
+      page,
+    };
+    dispatch(getAllCandidatos(queryConfig));
   };
 
   useEffect(() => {
@@ -63,6 +73,7 @@ const CandidatosMain = () => {
                 },
               ]}
             />
+            <Pagination pages={pages} changePage={changePage} />
           </>
         ) : (
           <div className="data-error">

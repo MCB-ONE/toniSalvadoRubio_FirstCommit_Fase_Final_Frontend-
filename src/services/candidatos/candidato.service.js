@@ -2,12 +2,13 @@ import axiosConfig from '../../utils/axios.config';
 import authHeader from '../auth/auth-header';
 
 // Call authHeaeder auxiliar function to generate the request`s headers to includ the bearer token
-const getAllCandidatos = (query = '') => {
+const getAllCandidatos = ({ query = '', page = 1 }) => {
+  console.log(page);
   if (query === '') {
-    return axiosConfig.get('api/candidatos', { headers: authHeader() });
+    return axiosConfig.get(`api/candidatos/?page=${page}`, { headers: authHeader() });
   }
   console.log(query);
-  return axiosConfig.get(`api/candidatos/?${query}`, { headers: authHeader() });
+  return axiosConfig.get(`api/candidatos/?${page}&${query}`, { headers: authHeader() });
 };
 
 const getCandidatosById = (id) => {

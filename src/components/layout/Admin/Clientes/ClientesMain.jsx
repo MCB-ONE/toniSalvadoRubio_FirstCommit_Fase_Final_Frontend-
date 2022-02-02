@@ -4,14 +4,15 @@ import SortableDataTable from '../../../sortableDataTable/SortableDataTable';
 import Spinner from '../../../spinner/Spinner';
 import TableNavbar from '../TableNavbar';
 import { getAllClientes, resetDetail } from '../../../../store/slices/clientes';
+import Pagination from '../../../pagination/Pagination';
 
 const ClientesMain = () => {
   const dispatch = useDispatch();
   const clientesList = useSelector((state) => state.clientes);
   const [clientesData, setClientesData] = useState(clientesList);
+  const pages = useSelector((state) => state.clientes.pagination);
   // Clientes query
   const [query, setQuery] = useState('');
-
   // Setting a searchable column list
   const searchableColumns = ['nombre', 'email', 'sector', 'personaContacto', 'telefono'];
 
@@ -33,6 +34,14 @@ const ClientesMain = () => {
   useEffect(() => {
     setClientesData(clientesList);
   }, [clientesList]);
+
+  // Pagination handler
+  const changePage = (page) => {
+    const queryConfig = {
+      page,
+    };
+    dispatch(getAllClientes(queryConfig));
+  };
 
   if (!clientesData.list) {
     return (
@@ -71,6 +80,7 @@ const ClientesMain = () => {
           },
         ]}
       />
+      <Pagination pages={pages} changePage={changePage} />
     </div>
   );
 };

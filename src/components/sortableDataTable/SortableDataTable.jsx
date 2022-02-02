@@ -33,7 +33,7 @@ const SortableDataTable = ({ data, columns }) => {
         elements.push(element);
       });
       return (
-        <td key="tags" className="tags">
+        <td key={item[column.row]} className="tags">
           <TagsList data={elements} />
         </td>
       );

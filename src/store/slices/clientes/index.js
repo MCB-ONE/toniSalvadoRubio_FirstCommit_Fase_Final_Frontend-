@@ -4,10 +4,10 @@ import clientesService from '../../../services/clientes/cliente.service';
 
 export const getAllClientes = createAsyncThunk(
   'clientes/fetchAll',
-  async (query = '', thunkAPI) => {
+  async (queryConfig = { query: '', page: 1 }, thunkAPI) => {
     try {
-      const data = await clientesService.getAllClientes(query);
-      return { clientes: data.data.data.data };
+      const data = await clientesService.getAllClientes(queryConfig);
+      return { clientes: data.data.data };
     } catch (error) {
       const message = (error.response
                 && error.response.data
@@ -85,6 +85,7 @@ export const cleanClienteDetail = () => {
 // Slice initial state
 const initialState = {
   list: false,
+  pagination: false,
   detail: false,
   isLoading: false,
   error: false,
@@ -105,7 +106,8 @@ export const clientesSlice = createSlice({
     },
     [getAllClientes.fulfilled]: (state, action) => {
       state.isLoading = false;
-      state.list = action.payload.clientes;
+      state.list = action.payload.clientes.data;
+      state.pagination = action.payload.clientes.meta;
     },
     [getAllClientes.rejected]: (state, action) => {
       state.isLoading = false;

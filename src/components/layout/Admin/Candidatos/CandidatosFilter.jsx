@@ -69,7 +69,11 @@ const CandidatosFilter = () => {
   };
 
   useEffect(() => {
-    dispatch(getAllCandidatos(new URLSearchParams(filters).toString()));
+    const query = new URLSearchParams(filters).toString();
+    const queryConfig = {
+      query,
+    };
+    dispatch(getAllCandidatos(queryConfig));
   }, [filters]);
 
   const clearFilters = () => {

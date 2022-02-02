@@ -6,10 +6,11 @@ import CandidatosService from '../../../services/candidatos/candidato.service';
 // CRUD thunk middlewares
 export const getAllCandidatos = createAsyncThunk(
   'candidatos/fetchAll',
-  async (query = '', thunkAPI) => {
+  async (queryConfig = { query: '', page: 1 }, thunkAPI) => {
+    console.log(queryConfig);
     try {
-      const data = await CandidatosService.getAllCandidatos(query);
-      return { candidatos: data.data.data.data };
+      const data = await CandidatosService.getAllCandidatos(queryConfig);
+      return { candidatos: data.data.data };
     } catch (error) {
       const message = (error.response
                 && error.response.data
@@ -107,6 +108,7 @@ export const cleanCandidatoDetail = () => {
 // Slice initial state
 const initialState = {
   list: false,
+  pagination: false,
   detail: false,
   isLoading: false,
   error: false,
@@ -126,7 +128,8 @@ const candidatoSlice = createSlice({
     },
     [getAllCandidatos.fulfilled]: (state, action) => {
       state.isLoading = false;
-      state.list = action.payload.candidatos;
+      state.list = action.payload.candidatos.data;
+      state.pagination = action.payload.candidatos.meta;
     },
     [getAllCandidatos.rejected]: (state, action) => {
       state.isLoading = false;
